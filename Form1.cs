@@ -14,6 +14,7 @@ using System.Net.Sockets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Xml;
+using System.Security.Cryptography;
 
 /*
 * 8000번 포트 리스닝을 위한 선행 작업 
@@ -80,21 +81,11 @@ namespace HttpServer
         private void btnMEFAuth_Click(object sender, EventArgs e)
         {
             svr.svcSvrCd = tbSvcSvrCd.Text; // 서비스 서버의 시퀀스
-            svr.svcCd = tbSvcCd.Text; // 서비스 서버의 서비스코드
-            svr.svcSvrNum = tbSvcSvrNum.Text; // 서비스 서버의 Number
-
-            // LG U+ 시뮬레이터 EKI값
-            svr.enrmtKeyId = "p_YI1FZnZwyPajxwKYv15g";
-
-            // svr.remoteCSEName이 없다면 remoteCSE 생성
-            // ReqRemoteCSECreate();
-            svr.remoteCSEName = "csr-" + svr.svcCd;
-
             LogWrite("svr.svcSvrCd = " + svr.svcSvrCd);
+            svr.svcCd = tbSvcCd.Text; // 서비스 서버의 서비스코드
             LogWrite("svr.svcCd = " + svr.svcCd);
+            svr.svcSvrNum = tbSvcSvrNum.Text; // 서비스 서버의 Number
             LogWrite("svr.svcSvrNum = " + svr.svcSvrNum);
-            LogWrite("svr.enrmtKeyId = " + svr.enrmtKeyId);
-            LogWrite("svr.remoteCSEName = " + svr.remoteCSEName);
 
             if (svr.svcCd != string.Empty && svr.svcSvrCd != string.Empty && svr.svcSvrNum != string.Empty)
                 RequestMEF();
@@ -125,7 +116,14 @@ namespace HttpServer
             LogWrite("----------MEF 인증----------");
             string retStr = SendHttpRequest(header, packetStr); // xml
             if (retStr != string.Empty)
+            {
                 ParsingXml(retStr);
+
+                // svr.remoteCSEName이 없다면 remoteCSE 생성
+                // ReqRemoteCSECreate();
+                svr.remoteCSEName = "csr-" + svr.svcCd;
+                LogWrite("svr.remoteCSEName = " + svr.remoteCSEName);
+            }
         }
 
         // 2. CSEBase-GET : oneM2M 접속 확인
@@ -161,6 +159,53 @@ namespace HttpServer
             lbEnrmtKey.Text = svr.enrmtKey;
             lbEntityId.Text = svr.entityId;
             lbToken.Text = svr.token;
+
+            // EKI값 계산하기
+            // short uuid구하기
+            string suuid = svr.entityId.Substring(10, 10);
+            LogWrite("suuid = " + suuid);
+
+            // KeyData Base64URL Decoding
+            string output = svr.enrmtKey;
+            output = output.Replace('-', '+'); // 62nd char of encoding
+            output = output.Replace('_', '/'); // 63rd char of encoding
+
+            switch (output.Length % 4) // Pad with trailing '='s
+            {
+                case 0:
+                    break; // No pad chars in this case
+                case 2:
+                    output += "==";
+                    break; // Two pad chars
+                case 3:
+                    output += "=";
+                    break; // One pad char
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(svr.enrmtKey), "Illegal base64url string!");
+            }
+
+            var converted = Convert.FromBase64String(output); // Standard base64 decoder
+
+            // keyData로 AES 128비트 비밀키 생성
+            System.Text.UTF8Encoding UTF8 = new System.Text.UTF8Encoding();
+            AesManaged tdes = new AesManaged();
+            tdes.Key = converted;
+            tdes.Mode = CipherMode.ECB;
+            tdes.Padding = PaddingMode.PKCS7;
+            ICryptoTransform crypt = tdes.CreateEncryptor();
+            byte[] plain = Encoding.UTF8.GetBytes(suuid);
+            byte[] cipher = crypt.TransformFinalBlock(plain, 0, plain.Length);
+            String enrmtKeyId = Convert.ToBase64String(cipher);
+
+            enrmtKeyId = enrmtKeyId.Split('=')[0]; // Remove any trailing '='s
+            enrmtKeyId = enrmtKeyId.Replace('+', '-'); // 62nd char of encoding
+            enrmtKeyId = enrmtKeyId.Replace('/', '_'); // 63rd char of encoding
+
+            LogWrite("enrmtKeyId = " + enrmtKeyId);
+
+            svr.enrmtKeyId = "p_YI1FZnZwyPajxwKYv15g";
+            LogWrite("svr.enrmtKeyId = " + svr.enrmtKeyId);
         }
 
         // 3. RemoteCSE-Create

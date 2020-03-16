@@ -33,3 +33,14 @@ D:\oneM2MPC\HttpServer_NB-IoT\obj\Debug\HttpServer.csproj.GenerateResource.cache
 D:\oneM2MPC\HttpServer_NB-IoT\obj\Debug\HttpServer.csproj.CopyComplete
 D:\oneM2MPC\HttpServer_NB-IoT\obj\Debug\HttpServer.exe
 D:\oneM2MPC\HttpServer_NB-IoT\obj\Debug\HttpServer.pdb
+D:\oneM2M_server_VB\bin\Debug\HttpServer.exe.config
+D:\oneM2M_server_VB\bin\Debug\HttpServer.exe
+D:\oneM2M_server_VB\bin\Debug\HttpServer.pdb
+D:\oneM2M_server_VB\bin\Debug\Newtonsoft.Json.dll
+D:\oneM2M_server_VB\obj\Debug\HttpServer.csprojAssemblyReference.cache
+D:\oneM2M_server_VB\obj\Debug\HttpServer.Form1.resources
+D:\oneM2M_server_VB\obj\Debug\HttpServer.Properties.Resources.resources
+D:\oneM2M_server_VB\obj\Debug\HttpServer.csproj.GenerateResource.cache
+D:\oneM2M_server_VB\obj\Debug\HttpServer.csproj.CopyComplete
+D:\oneM2M_server_VB\obj\Debug\HttpServer.exe
+D:\oneM2M_server_VB\obj\Debug\HttpServer.pdb
