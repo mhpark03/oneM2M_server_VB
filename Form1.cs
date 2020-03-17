@@ -52,32 +52,15 @@ namespace HttpServer
         private void Form1_Load(object sender, EventArgs e)
         {
             StartHttpServer();
+            svr.enrmtKeyId = string.Empty;
         }
 
-        // CSE Base Get
-        private void button1_Click(object sender, EventArgs e)
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ReqCSEBaseGET();
+            StopHttpServer();
         }
 
-        // RemoteCSE-GET
-        private void button2_Click(object sender, EventArgs e)
-        {
-            ReqRemoteCSEGet();
-        }
-
-        // 데이터 송신
-        private void button3_Click(object sender, EventArgs e)
-        {
-            SendDataToPlatform();
-        }              
-
-        // RemoteCSE-Create
-        private void button4_Click(object sender, EventArgs e)
-        {
-            ReqRemoteCSECreate();
-        }
-
+        // MEF Auth
         private void btnMEFAuth_Click(object sender, EventArgs e)
         {
             svr.svcSvrCd = tbSvcSvrCd.Text; // 서비스 서버의 시퀀스
@@ -93,11 +76,42 @@ namespace HttpServer
                 LogWrite("서버인증파라미터 세팅하세요");
         }
 
-        private void btnTest_Click(object sender, EventArgs e)
-        {          
-            
+        // CSE Base Get
+        private void btnGetCSEBase_Click(object sender, EventArgs e)
+        {
+            if (svr.enrmtKeyId != string.Empty)
+                ReqCSEBaseGET();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
         }
-        
+
+        // RemoteCSE-GET
+        private void btnGetRemoteCSE_Click(object sender, EventArgs e)
+        {
+            if (svr.enrmtKeyId != string.Empty)
+                ReqRemoteCSEGet();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
+        // RemoteCSE-Create
+        private void btnSetRemoteCSE_Click(object sender, EventArgs e)
+        {
+            if (svr.enrmtKeyId != string.Empty)
+                ReqRemoteCSECreate();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
+        // 데이터 송신
+        private void btnSendData_Click(object sender, EventArgs e)
+        {
+            if (svr.enrmtKeyId != string.Empty)
+                SendDataToPlatform();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
         // 1. MEF 인증
         private void RequestMEF()
         {
@@ -126,22 +140,6 @@ namespace HttpServer
             }
         }
 
-        // 2. CSEBase-GET : oneM2M 접속 확인
-        private void ReqCSEBaseGET()
-        {
-            ReqHeader header = new ReqHeader();
-            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1";
-            header.Method = "GET";
-            header.Accept = "application/json";
-            header.X_M2M_RI = "CSEBase_Retrieve_1";
-            header.X_M2M_Origin = svr.entityId;
-            header.X_MEF_TK = svr.token;
-            header.X_MEF_EKI = svr.enrmtKeyId;
-            string retStr = SendHttpRequest(header, string.Empty);
-            if (retStr != string.Empty)
-                LogWrite(retStr);
-        }
-
         private void ParsingXml(string xml)
         {
             XmlDocument xDoc = new XmlDocument();
@@ -163,7 +161,7 @@ namespace HttpServer
             // EKI값 계산하기
             // short uuid구하기
             string suuid = svr.entityId.Substring(10, 10);
-            LogWrite("suuid = " + suuid);
+            //LogWrite("suuid = " + suuid);
 
             // KeyData Base64URL Decoding
             string output = svr.enrmtKey;
@@ -202,10 +200,25 @@ namespace HttpServer
             enrmtKeyId = enrmtKeyId.Replace('+', '-'); // 62nd char of encoding
             enrmtKeyId = enrmtKeyId.Replace('/', '_'); // 63rd char of encoding
 
-            LogWrite("enrmtKeyId = " + enrmtKeyId);
-
-            svr.enrmtKeyId = "p_YI1FZnZwyPajxwKYv15g";
+            lbEnrmtKeyId.Text = enrmtKeyId;
+            svr.enrmtKeyId = enrmtKeyId;
             LogWrite("svr.enrmtKeyId = " + svr.enrmtKeyId);
+        }
+
+        // 2. CSEBase-GET : oneM2M 접속 확인
+        private void ReqCSEBaseGET()
+        {
+            ReqHeader header = new ReqHeader();
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1";
+            header.Method = "GET";
+            header.Accept = "application/xml";
+            header.X_M2M_RI = "CSEBase_Retrieve_1";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            string retStr = SendHttpRequest(header, string.Empty);
+            if (retStr != string.Empty)
+                LogWrite(retStr);
         }
 
         // 3. RemoteCSE-Create

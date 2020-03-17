@@ -28,12 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnGetCSEBase = new System.Windows.Forms.Button();
+            this.btnGetRemoteCSE = new System.Windows.Forms.Button();
+            this.btnSendData = new System.Windows.Forms.Button();
             this.tbData = new System.Windows.Forms.TextBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.btnTest = new System.Windows.Forms.Button();
+            this.btnSetRemoteCSE = new System.Windows.Forms.Button();
             this.btnMEFAuth = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.tbSvcSvrCd = new System.Windows.Forms.TextBox();
@@ -42,78 +41,71 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbSvcCd = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.tbEnrmtKeyId = new System.Windows.Forms.TextBox();
+            this.lbEnrmtKeyId = new System.Windows.Forms.Label();
             this.lbEnrmtKey = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lbToken = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.lbEntityId = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.tbDeviceEntityID = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // btnGetCSEBase
             // 
-            this.button1.Location = new System.Drawing.Point(23, 33);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(162, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "CSEBase-GET";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnGetCSEBase.Location = new System.Drawing.Point(23, 33);
+            this.btnGetCSEBase.Name = "btnGetCSEBase";
+            this.btnGetCSEBase.Size = new System.Drawing.Size(162, 23);
+            this.btnGetCSEBase.TabIndex = 0;
+            this.btnGetCSEBase.Text = "CSEBase-GET";
+            this.btnGetCSEBase.UseVisualStyleBackColor = true;
+            this.btnGetCSEBase.Click += new System.EventHandler(this.btnGetCSEBase_Click);
             // 
-            // button2
+            // btnGetRemoteCSE
             // 
-            this.button2.Location = new System.Drawing.Point(191, 33);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(162, 23);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "RemoteCSE-GET";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btnGetRemoteCSE.Location = new System.Drawing.Point(191, 33);
+            this.btnGetRemoteCSE.Name = "btnGetRemoteCSE";
+            this.btnGetRemoteCSE.Size = new System.Drawing.Size(162, 23);
+            this.btnGetRemoteCSE.TabIndex = 0;
+            this.btnGetRemoteCSE.Text = "RemoteCSE-GET";
+            this.btnGetRemoteCSE.UseVisualStyleBackColor = true;
+            this.btnGetRemoteCSE.Click += new System.EventHandler(this.btnGetRemoteCSE_Click);
             // 
-            // button3
+            // btnSendData
             // 
-            this.button3.Location = new System.Drawing.Point(1011, 367);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Send Data";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btnSendData.Location = new System.Drawing.Point(493, 65);
+            this.btnSendData.Name = "btnSendData";
+            this.btnSendData.Size = new System.Drawing.Size(75, 23);
+            this.btnSendData.TabIndex = 3;
+            this.btnSendData.Text = "Send Data";
+            this.btnSendData.UseVisualStyleBackColor = true;
+            this.btnSendData.Click += new System.EventHandler(this.btnSendData_Click);
             // 
             // tbData
             // 
-            this.tbData.Location = new System.Drawing.Point(675, 367);
+            this.tbData.Location = new System.Drawing.Point(21, 67);
             this.tbData.Name = "tbData";
-            this.tbData.Size = new System.Drawing.Size(330, 21);
+            this.tbData.Size = new System.Drawing.Size(445, 21);
             this.tbData.TabIndex = 4;
             this.tbData.Text = "1234";
             // 
-            // button4
+            // btnSetRemoteCSE
             // 
-            this.button4.Location = new System.Drawing.Point(359, 33);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(162, 23);
-            this.button4.TabIndex = 0;
-            this.button4.Text = "RemoteCSE-Create";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // btnTest
-            // 
-            this.btnTest.Location = new System.Drawing.Point(1167, 589);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(75, 23);
-            this.btnTest.TabIndex = 5;
-            this.btnTest.Text = "테스트";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            this.btnSetRemoteCSE.Location = new System.Drawing.Point(359, 33);
+            this.btnSetRemoteCSE.Name = "btnSetRemoteCSE";
+            this.btnSetRemoteCSE.Size = new System.Drawing.Size(162, 23);
+            this.btnSetRemoteCSE.TabIndex = 0;
+            this.btnSetRemoteCSE.Text = "RemoteCSE-Create";
+            this.btnSetRemoteCSE.UseVisualStyleBackColor = true;
+            this.btnSetRemoteCSE.Click += new System.EventHandler(this.btnSetRemoteCSE_Click);
             // 
             // btnMEFAuth
             // 
@@ -140,7 +132,7 @@
             this.tbSvcSvrCd.Name = "tbSvcSvrCd";
             this.tbSvcSvrCd.Size = new System.Drawing.Size(100, 21);
             this.tbSvcSvrCd.TabIndex = 7;
-            this.tbSvcSvrCd.Text = "262";
+            this.tbSvcSvrCd.Text = "300";
             // 
             // label2
             // 
@@ -174,18 +166,17 @@
             this.tbSvcCd.Name = "tbSvcCd";
             this.tbSvcCd.Size = new System.Drawing.Size(100, 21);
             this.tbSvcCd.TabIndex = 7;
-            this.tbSvcCd.Text = "DMTL";
+            this.tbSvcCd.Text = "CATM";
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lbEnrmtKeyId);
             this.groupBox1.Controls.Add(this.btnMEFAuth);
-            this.groupBox1.Controls.Add(this.tbEnrmtKeyId);
             this.groupBox1.Controls.Add(this.tbSvcCd);
             this.groupBox1.Controls.Add(this.lbEnrmtKey);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.lbToken);
-            this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label3);
@@ -194,19 +185,21 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.tbSvcSvrNum);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(652, 63);
+            this.groupBox1.Location = new System.Drawing.Point(652, 14);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(643, 169);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "MEF";
             // 
-            // tbEnrmtKeyId
+            // lbEnrmtKeyId
             // 
-            this.tbEnrmtKeyId.Location = new System.Drawing.Point(99, 99);
-            this.tbEnrmtKeyId.Name = "tbEnrmtKeyId";
-            this.tbEnrmtKeyId.Size = new System.Drawing.Size(324, 21);
-            this.tbEnrmtKeyId.TabIndex = 7;
+            this.lbEnrmtKeyId.Location = new System.Drawing.Point(317, 101);
+            this.lbEnrmtKeyId.Name = "lbEnrmtKeyId";
+            this.lbEnrmtKeyId.Size = new System.Drawing.Size(304, 16);
+            this.lbEnrmtKeyId.TabIndex = 8;
+            this.lbEnrmtKeyId.Text = "svr.enrmtKeyId";
+            this.lbEnrmtKeyId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lbEnrmtKey
             // 
@@ -230,27 +223,18 @@
             // 
             this.lbToken.Location = new System.Drawing.Point(317, 79);
             this.lbToken.Name = "lbToken";
-            this.lbToken.Size = new System.Drawing.Size(304, 16);
+            this.lbToken.Size = new System.Drawing.Size(320, 16);
             this.lbToken.TabIndex = 6;
             this.lbToken.Text = "svr.token";
             this.lbToken.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label9
-            // 
-            this.label9.Location = new System.Drawing.Point(429, 104);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(161, 16);
-            this.label9.TabIndex = 6;
-            this.label9.Text = "<- 자바 UUID 프로젝트 이용";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(9, 104);
+            this.label7.Location = new System.Drawing.Point(202, 101);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(84, 16);
+            this.label7.Size = new System.Drawing.Size(113, 20);
             this.label7.TabIndex = 6;
-            this.label7.Text = "enrmtKeyId";
+            this.label7.Text = "svr.enrmtKeyId = ";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label5
@@ -291,33 +275,63 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Controls.Add(this.button4);
-            this.groupBox2.Controls.Add(this.button2);
-            this.groupBox2.Location = new System.Drawing.Point(652, 238);
+            this.groupBox2.Controls.Add(this.btnGetCSEBase);
+            this.groupBox2.Controls.Add(this.btnSetRemoteCSE);
+            this.groupBox2.Controls.Add(this.btnGetRemoteCSE);
+            this.groupBox2.Location = new System.Drawing.Point(652, 199);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(643, 106);
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "CSE";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.tbDeviceEntityID);
+            this.groupBox3.Controls.Add(this.label8);
+            this.groupBox3.Controls.Add(this.tbData);
+            this.groupBox3.Controls.Add(this.btnSendData);
+            this.groupBox3.Location = new System.Drawing.Point(654, 320);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(643, 106);
+            this.groupBox3.TabIndex = 28;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "DATA";
+            // 
+            // tbDeviceEntityID
+            // 
+            this.tbDeviceEntityID.Location = new System.Drawing.Point(115, 33);
+            this.tbDeviceEntityID.Name = "tbDeviceEntityID";
+            this.tbDeviceEntityID.Size = new System.Drawing.Size(205, 21);
+            this.tbDeviceEntityID.TabIndex = 8;
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(22, 32);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(94, 22);
+            this.label8.TabIndex = 7;
+            this.label8.Text = "Device EntityID";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1307, 740);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.tbLog);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnTest);
-            this.Controls.Add(this.tbData);
-            this.Controls.Add(this.button3);
             this.Name = "Form1";
             this.Text = "NB-IoT HTTP Server";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -325,12 +339,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnGetCSEBase;
+        private System.Windows.Forms.Button btnGetRemoteCSE;
+        private System.Windows.Forms.Button btnSendData;
         private System.Windows.Forms.TextBox tbData;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Button btnSetRemoteCSE;
         private System.Windows.Forms.Button btnMEFAuth;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbSvcSvrCd;
@@ -347,9 +360,11 @@
         private System.Windows.Forms.Label lbEntityId;
         private System.Windows.Forms.TextBox tbLog;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox tbEnrmtKeyId;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label lbEnrmtKeyId;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox tbDeviceEntityID;
+        private System.Windows.Forms.Label label8;
     }
 }
 
