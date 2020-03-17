@@ -79,6 +79,7 @@ namespace HttpServer
         // CSE Base Get
         private void btnGetCSEBase_Click(object sender, EventArgs e)
         {
+            LogWrite("----------CSEBase GET----------");
             if (svr.enrmtKeyId != string.Empty)
                 ReqCSEBaseGET();
             else
@@ -88,6 +89,7 @@ namespace HttpServer
         // RemoteCSE-GET
         private void btnGetRemoteCSE_Click(object sender, EventArgs e)
         {
+            LogWrite("----------remoteCSE GET----------");
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSEGet();
             else
@@ -97,6 +99,7 @@ namespace HttpServer
         // RemoteCSE-Create
         private void btnSetRemoteCSE_Click(object sender, EventArgs e)
         {
+            LogWrite("----------remoteCSE SET----------");
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSECreate();
             else
@@ -106,8 +109,20 @@ namespace HttpServer
         // RemoteCSE-Update
         private void btnUpdateRemoteCSE_Click(object sender, EventArgs e)
         {
+            // 서비스서버에 대해서는 미지원함
+            LogWrite("----------remoteCSE UPDATE----------");
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSEUpdate();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
+        // RemoteCSE-Delete
+        private void btnDelRemoteCSE_Click(object sender, EventArgs e)
+        {
+            LogWrite("----------remoteCSE DEL----------");
+            if (svr.enrmtKeyId != string.Empty)
+                ReqRemoteCSEDEL();
             else
                 LogWrite("서버인증파라미터 세팅하세요");
         }
@@ -115,6 +130,7 @@ namespace HttpServer
         // 데이터 송신
         private void btnSendData_Click(object sender, EventArgs e)
         {
+            LogWrite("----------DATA SEND----------");
             if (svr.enrmtKeyId != string.Empty)
                 SendDataToPlatform();
             else
@@ -128,6 +144,11 @@ namespace HttpServer
             header.Url = mefUrl + "/mef/server";
             header.Method = "POST";
             header.ContentType = "application/xml";
+            header.X_M2M_RI = string.Empty;
+            header.X_M2M_Origin = string.Empty;
+            header.X_MEF_TK = string.Empty;
+            header.X_MEF_EKI = string.Empty;
+            header.X_M2M_NM = string.Empty;
 
             string packetStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
             packetStr += "<auth>";
@@ -144,11 +165,9 @@ namespace HttpServer
 
                 // svr.remoteCSEName이 없다면 remoteCSE 생성
                 // ReqRemoteCSECreate();
-                svr.remoteCSEName = "csr-" + svr.svcCd;
+                string nameCSR = svr.entityId.Replace("-","");
+                svr.remoteCSEName = "csr-" + nameCSR;
                 LogWrite("svr.remoteCSEName = " + svr.remoteCSEName);
-
-                svr.remoteACPName = "acp-" + svr.svcCd;
-                LogWrite("svr.remoteACPName = " + svr.remoteACPName);
             }
         }
 
@@ -228,6 +247,7 @@ namespace HttpServer
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
+            header.X_M2M_NM = string.Empty;
             string retStr = SendHttpRequest(header, string.Empty);
             if (retStr != string.Empty)
                 LogWrite(retStr);
@@ -239,11 +259,12 @@ namespace HttpServer
             ReqHeader header = new ReqHeader();
             header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + svr.remoteCSEName;
             header.Method = "GET";
-            header.Accept = "application/vnd.onem2m-res+json";
+            header.Accept = "application/vnd.onem2m-res+xml";
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "RemoteCSE_Retrieve";
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
+            header.X_M2M_NM = string.Empty;
             string retStr = SendHttpRequest(header, string.Empty);
             if (retStr != string.Empty)
                 LogWrite(retStr);
@@ -262,13 +283,15 @@ namespace HttpServer
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
             header.X_M2M_NM = svr.remoteCSEName;
+
             var obj = new JObject();
             obj.Add("cst", "3");
             obj.Add("cb", "/" + svr.entityId + "/cb-1");
             obj.Add("csi", "/" + svr.entityId);
             obj.Add("rr", "true");
             var arr = new JArray();
-            arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
+            arr.Add("http://172.17.224.57:8081");
+            // arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
             obj.Add("poa", arr);
             //LogWriteobj.ToString());
             string retStr = SendHttpRequest(header, obj.ToString());
@@ -284,26 +307,21 @@ namespace HttpServer
         {
             ReqHeader header = new ReqHeader();
             header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/"+svr.remoteCSEName;
-            header.Method = "PUT";
+            header.Method = "UPDATE";
             header.Accept = "application/vnd.onem2m-res+json";
             header.ContentType = "application/vnd.onem2m-res+json";
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "RemoteCSE_Update";
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
-            //header.X_M2M_NM = svr.remoteCSEName;
+            header.X_M2M_NM = string.Empty;
+
             var obj = new JObject();
-            obj.Add("cst", "3");
-            obj.Add("cb", "/" + svr.entityId + "/cb-1");
-            obj.Add("csi", "/" + svr.entityId);
-            obj.Add("rr", "true");
-            var arr = new JArray();
-            arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
+         var arr = new JArray();
+            arr.Add("http://172.17.224.57:8081");
+            //arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
             obj.Add("poa", arr);
             //LogWriteobj.ToString());
-            var arracpi = new JArray();
-            arr.Add("cb-1/" + svr.remoteCSEName + "/" + svr.remoteACPName);
-            obj.Add("acpi", arracpi);
             string retStr = SendHttpRequest(header, obj.ToString());
             if (retStr != string.Empty)
             {
@@ -312,20 +330,41 @@ namespace HttpServer
             }
         }
 
-        private void SendDataToPlatform()
+        // 3. RemoteCSE-Delete
+        private void ReqRemoteCSEDEL()
         {
             ReqHeader header = new ReqHeader();
-            header.Url = brkUrl + "/" + deviceEntityId + "/10250/0/1";
-            header.Method = "POST";
-            header.ContentType = "application/vnd.onem2m-res+xml;ty=4";
-            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data";
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + svr.remoteCSEName;
+            header.Method = "DELETE";
+            header.Accept = "application/vnd.onem2m-res+xml";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "RemoteCSE_Delete";
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
-            string data = Convert.ToBase64String(Encoding.UTF8.GetBytes(tbData.Text));
-            string packetStr = "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.onem2m.org/xml/protocols CDT-contentInstance-v1_0_0.xsd\">";
-            packetStr += "<cnf>application/octet-stream</cnf>";
-            packetStr += "<con>" + data + "</con>";
+            header.X_M2M_NM = string.Empty;
+            string retStr = SendHttpRequest(header, string.Empty);
+            if (retStr != string.Empty)
+                LogWrite(retStr);
+        }
+
+        private void SendDataToPlatform()
+        {
+            ReqHeader header = new ReqHeader();
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
+            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + tbDeviceEntityID.Text + "/cnt-" + tbContainer.Text;
+            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
+            header.Method = "POST";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data_send";
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            header.X_M2M_NM = string.Empty;
+            header.Accept = "application/vnd.onem2m-res+xml";
+            header.ContentType = "application/vnd.onem2m-res+xml;ty=4";
+
+            string packetStr = "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
+            packetStr += "<cnf>text/plain</cnf>";
+            packetStr += "<con>" + tbData.Text + "</con>";
             packetStr += "</m2m:cin>";
             string retStr = SendHttpRequest(header, packetStr);
             if (retStr != string.Empty)
@@ -355,6 +394,10 @@ namespace HttpServer
                 if (header.X_MEF_EKI != string.Empty)
                     wReq.Headers.Add("X-MEF-EKI", header.X_MEF_EKI);
 
+                for (int i = 0; i < wReq.Headers.Count; ++i)
+                    LogWrite("[" + wReq.Headers.Keys[i] + "] " + wReq.Headers[i]);
+                LogWrite(data);
+
                 // POST 전송일 경우      
                 if (header.Method == "POST")
                 {
@@ -364,9 +407,11 @@ namespace HttpServer
                     dataStream.Close();
                 }
 
+                LogWrite("----------Response DATA----------");
                 wReq.Timeout = 20000;          // 서버 응답을 20초동안 기다림
                 using (wRes = (HttpWebResponse)wReq.GetResponse())
                 {
+                    LogWrite("[" + (int)wRes.StatusCode + "] " + wRes.StatusCode.ToString());
                     for (int i = 0; i < wRes.Headers.Count; ++i)
                         LogWrite("[" + wRes.Headers.Keys[i] + "] " + wRes.Headers[i]);
                     Stream respPostStream = wRes.GetResponseStream();
@@ -397,7 +442,7 @@ namespace HttpServer
                 if (tbLog.TextLength > 5000)
                     tbLog.Text = string.Empty;
                 tbLog.AppendText(Environment.NewLine);
-                tbLog.AppendText(DateTime.Now.ToString("HH:mm:ss ") + data);
+                tbLog.AppendText(DateTime.Now.ToString("MM/dd HH:mm:ss ") + data);
                 tbLog.SelectionStart = tbLog.TextLength;
                 tbLog.ScrollToCaret();
             }));
@@ -556,8 +601,6 @@ namespace HttpServer
         public string enrmtKeyId { get; set; } // MEF 인증 결과를 통해 생성하는 ID
 
         public string remoteCSEName { get; set; } // RemoteCSE 리소스 이름
-
-        public string remoteACPName { get; set; } // RemoteCSE ACP 이름
     }
 
     public class ReqHeader

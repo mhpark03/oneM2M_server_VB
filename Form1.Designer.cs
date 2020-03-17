@@ -51,10 +51,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnDelRemoteCSE = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tbDeviceEntityID = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.btnUpdateRemoteCSE = new System.Windows.Forms.Button();
+            this.tbContainer = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -64,9 +66,9 @@
             // 
             this.btnGetCSEBase.Location = new System.Drawing.Point(23, 33);
             this.btnGetCSEBase.Name = "btnGetCSEBase";
-            this.btnGetCSEBase.Size = new System.Drawing.Size(162, 23);
+            this.btnGetCSEBase.Size = new System.Drawing.Size(119, 23);
             this.btnGetCSEBase.TabIndex = 0;
-            this.btnGetCSEBase.Text = "CSEBase-GET";
+            this.btnGetCSEBase.Text = "CSEBase 조회";
             this.btnGetCSEBase.UseVisualStyleBackColor = true;
             this.btnGetCSEBase.Click += new System.EventHandler(this.btnGetCSEBase_Click);
             // 
@@ -74,15 +76,15 @@
             // 
             this.btnGetRemoteCSE.Location = new System.Drawing.Point(23, 62);
             this.btnGetRemoteCSE.Name = "btnGetRemoteCSE";
-            this.btnGetRemoteCSE.Size = new System.Drawing.Size(162, 23);
+            this.btnGetRemoteCSE.Size = new System.Drawing.Size(119, 23);
             this.btnGetRemoteCSE.TabIndex = 0;
-            this.btnGetRemoteCSE.Text = "RemoteCSE-GET";
+            this.btnGetRemoteCSE.Text = "CSR 조회";
             this.btnGetRemoteCSE.UseVisualStyleBackColor = true;
             this.btnGetRemoteCSE.Click += new System.EventHandler(this.btnGetRemoteCSE_Click);
             // 
             // btnSendData
             // 
-            this.btnSendData.Location = new System.Drawing.Point(493, 65);
+            this.btnSendData.Location = new System.Drawing.Point(493, 86);
             this.btnSendData.Name = "btnSendData";
             this.btnSendData.Size = new System.Drawing.Size(75, 23);
             this.btnSendData.TabIndex = 3;
@@ -92,7 +94,7 @@
             // 
             // tbData
             // 
-            this.tbData.Location = new System.Drawing.Point(21, 67);
+            this.tbData.Location = new System.Drawing.Point(21, 88);
             this.tbData.Name = "tbData";
             this.tbData.Size = new System.Drawing.Size(445, 21);
             this.tbData.TabIndex = 4;
@@ -100,11 +102,11 @@
             // 
             // btnSetRemoteCSE
             // 
-            this.btnSetRemoteCSE.Location = new System.Drawing.Point(204, 62);
+            this.btnSetRemoteCSE.Location = new System.Drawing.Point(146, 62);
             this.btnSetRemoteCSE.Name = "btnSetRemoteCSE";
-            this.btnSetRemoteCSE.Size = new System.Drawing.Size(162, 23);
+            this.btnSetRemoteCSE.Size = new System.Drawing.Size(118, 23);
             this.btnSetRemoteCSE.TabIndex = 0;
-            this.btnSetRemoteCSE.Text = "RemoteCSE-Create";
+            this.btnSetRemoteCSE.Text = "CSR 생성";
             this.btnSetRemoteCSE.UseVisualStyleBackColor = true;
             this.btnSetRemoteCSE.Click += new System.EventHandler(this.btnSetRemoteCSE_Click);
             // 
@@ -276,7 +278,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btnUpdateRemoteCSE);
+            this.groupBox2.Controls.Add(this.btnDelRemoteCSE);
             this.groupBox2.Controls.Add(this.btnGetCSEBase);
             this.groupBox2.Controls.Add(this.btnSetRemoteCSE);
             this.groupBox2.Controls.Add(this.btnGetRemoteCSE);
@@ -287,15 +289,27 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "CSE";
             // 
+            // btnDelRemoteCSE
+            // 
+            this.btnDelRemoteCSE.Location = new System.Drawing.Point(269, 62);
+            this.btnDelRemoteCSE.Name = "btnDelRemoteCSE";
+            this.btnDelRemoteCSE.Size = new System.Drawing.Size(118, 23);
+            this.btnDelRemoteCSE.TabIndex = 2;
+            this.btnDelRemoteCSE.Text = "CSR 삭제";
+            this.btnDelRemoteCSE.UseVisualStyleBackColor = true;
+            this.btnDelRemoteCSE.Click += new System.EventHandler(this.btnDelRemoteCSE_Click);
+            // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.tbContainer);
+            this.groupBox3.Controls.Add(this.label9);
             this.groupBox3.Controls.Add(this.tbDeviceEntityID);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.tbData);
             this.groupBox3.Controls.Add(this.btnSendData);
             this.groupBox3.Location = new System.Drawing.Point(654, 320);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(643, 106);
+            this.groupBox3.Size = new System.Drawing.Size(643, 155);
             this.groupBox3.TabIndex = 28;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "DATA";
@@ -316,15 +330,21 @@
             this.label8.Text = "Device EntityID";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btnUpdateRemoteCSE
+            // tbContainer
             // 
-            this.btnUpdateRemoteCSE.Location = new System.Drawing.Point(392, 62);
-            this.btnUpdateRemoteCSE.Name = "btnUpdateRemoteCSE";
-            this.btnUpdateRemoteCSE.Size = new System.Drawing.Size(162, 23);
-            this.btnUpdateRemoteCSE.TabIndex = 1;
-            this.btnUpdateRemoteCSE.Text = "RemoteCSE-Update";
-            this.btnUpdateRemoteCSE.UseVisualStyleBackColor = true;
-            this.btnUpdateRemoteCSE.Click += new System.EventHandler(this.btnUpdateRemoteCSE_Click);
+            this.tbContainer.Location = new System.Drawing.Point(114, 61);
+            this.tbContainer.Name = "tbContainer";
+            this.tbContainer.Size = new System.Drawing.Size(205, 21);
+            this.tbContainer.TabIndex = 10;
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(21, 60);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(94, 22);
+            this.label9.TabIndex = 9;
+            this.label9.Text = "폴더명";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Form1
             // 
@@ -377,7 +397,9 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox tbDeviceEntityID;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button btnUpdateRemoteCSE;
+        private System.Windows.Forms.Button btnDelRemoteCSE;
+        private System.Windows.Forms.TextBox tbContainer;
+        private System.Windows.Forms.Label label9;
     }
 }
 
