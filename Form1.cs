@@ -103,6 +103,15 @@ namespace HttpServer
                 LogWrite("서버인증파라미터 세팅하세요");
         }
 
+        // RemoteCSE-Update
+        private void btnUpdateRemoteCSE_Click(object sender, EventArgs e)
+        {
+            if (svr.enrmtKeyId != string.Empty)
+                ReqRemoteCSEUpdate();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
         // 데이터 송신
         private void btnSendData_Click(object sender, EventArgs e)
         {
@@ -137,6 +146,9 @@ namespace HttpServer
                 // ReqRemoteCSECreate();
                 svr.remoteCSEName = "csr-" + svr.svcCd;
                 LogWrite("svr.remoteCSEName = " + svr.remoteCSEName);
+
+                svr.remoteACPName = "acp-" + svr.svcCd;
+                LogWrite("svr.remoteACPName = " + svr.remoteACPName);
             }
         }
 
@@ -212,7 +224,23 @@ namespace HttpServer
             header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1";
             header.Method = "GET";
             header.Accept = "application/xml";
-            header.X_M2M_RI = "CSEBase_Retrieve_1";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "CSEBase";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            string retStr = SendHttpRequest(header, string.Empty);
+            if (retStr != string.Empty)
+                LogWrite(retStr);
+        }
+
+        // 3. RemoteCSE-Get
+        private void ReqRemoteCSEGet()
+        {
+            ReqHeader header = new ReqHeader();
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + svr.remoteCSEName;
+            header.Method = "GET";
+            header.Accept = "application/vnd.onem2m-res+json";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "RemoteCSE_Retrieve";
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
@@ -229,7 +257,7 @@ namespace HttpServer
             header.Method = "POST";
             header.Accept = "application/vnd.onem2m-res+json";
             header.ContentType = "application/vnd.onem2m-res+json;ty=16";
-            header.X_M2M_RI = "RemoteCSE_Create_1";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "RemoteCSE_Create";
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
@@ -251,20 +279,37 @@ namespace HttpServer
             }
         }
 
-        // 3. RemoteCSE-Get
-        private void ReqRemoteCSEGet()
+        // 3. RemoteCSE-Update
+        private void ReqRemoteCSEUpdate()
         {
             ReqHeader header = new ReqHeader();
-            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + svr.remoteCSEName;
-            header.Method = "GET";
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/"+svr.remoteCSEName;
+            header.Method = "PUT";
             header.Accept = "application/vnd.onem2m-res+json";
-            header.X_M2M_RI = "RemoteCSE_Retrieve_1";
+            header.ContentType = "application/vnd.onem2m-res+json";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "RemoteCSE_Update";
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
-            string retStr = SendHttpRequest(header, string.Empty);
+            //header.X_M2M_NM = svr.remoteCSEName;
+            var obj = new JObject();
+            obj.Add("cst", "3");
+            obj.Add("cb", "/" + svr.entityId + "/cb-1");
+            obj.Add("csi", "/" + svr.entityId);
+            obj.Add("rr", "true");
+            var arr = new JArray();
+            arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
+            obj.Add("poa", arr);
+            //LogWriteobj.ToString());
+            var arracpi = new JArray();
+            arr.Add("cb-1/" + svr.remoteCSEName + "/" + svr.remoteACPName);
+            obj.Add("acpi", arracpi);
+            string retStr = SendHttpRequest(header, obj.ToString());
             if (retStr != string.Empty)
+            {
                 LogWrite(retStr);
+                // 이미 같은 이름으로 생성되어 있다면 응답 : {"message": "CONFLICT_INVALID_RESOURCE_NAME"}
+            }
         }
 
         private void SendDataToPlatform()
@@ -273,7 +318,7 @@ namespace HttpServer
             header.Url = brkUrl + "/" + deviceEntityId + "/10250/0/1";
             header.Method = "POST";
             header.ContentType = "application/vnd.onem2m-res+xml;ty=4";
-            header.X_M2M_RI = "data_send_1";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data";
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
@@ -319,6 +364,7 @@ namespace HttpServer
                     dataStream.Close();
                 }
 
+                wReq.Timeout = 20000;          // 서버 응답을 20초동안 기다림
                 using (wRes = (HttpWebResponse)wReq.GetResponse())
                 {
                     for (int i = 0; i < wRes.Headers.Count; ++i)
@@ -510,6 +556,8 @@ namespace HttpServer
         public string enrmtKeyId { get; set; } // MEF 인증 결과를 통해 생성하는 ID
 
         public string remoteCSEName { get; set; } // RemoteCSE 리소스 이름
+
+        public string remoteACPName { get; set; } // RemoteCSE ACP 이름
     }
 
     public class ReqHeader

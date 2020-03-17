@@ -54,6 +54,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tbDeviceEntityID = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.btnUpdateRemoteCSE = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -71,7 +72,7 @@
             // 
             // btnGetRemoteCSE
             // 
-            this.btnGetRemoteCSE.Location = new System.Drawing.Point(191, 33);
+            this.btnGetRemoteCSE.Location = new System.Drawing.Point(23, 62);
             this.btnGetRemoteCSE.Name = "btnGetRemoteCSE";
             this.btnGetRemoteCSE.Size = new System.Drawing.Size(162, 23);
             this.btnGetRemoteCSE.TabIndex = 0;
@@ -99,7 +100,7 @@
             // 
             // btnSetRemoteCSE
             // 
-            this.btnSetRemoteCSE.Location = new System.Drawing.Point(359, 33);
+            this.btnSetRemoteCSE.Location = new System.Drawing.Point(204, 62);
             this.btnSetRemoteCSE.Name = "btnSetRemoteCSE";
             this.btnSetRemoteCSE.Size = new System.Drawing.Size(162, 23);
             this.btnSetRemoteCSE.TabIndex = 0;
@@ -275,6 +276,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnUpdateRemoteCSE);
             this.groupBox2.Controls.Add(this.btnGetCSEBase);
             this.groupBox2.Controls.Add(this.btnSetRemoteCSE);
             this.groupBox2.Controls.Add(this.btnGetRemoteCSE);
@@ -313,6 +315,16 @@
             this.label8.TabIndex = 7;
             this.label8.Text = "Device EntityID";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnUpdateRemoteCSE
+            // 
+            this.btnUpdateRemoteCSE.Location = new System.Drawing.Point(392, 62);
+            this.btnUpdateRemoteCSE.Name = "btnUpdateRemoteCSE";
+            this.btnUpdateRemoteCSE.Size = new System.Drawing.Size(162, 23);
+            this.btnUpdateRemoteCSE.TabIndex = 1;
+            this.btnUpdateRemoteCSE.Text = "RemoteCSE-Update";
+            this.btnUpdateRemoteCSE.UseVisualStyleBackColor = true;
+            this.btnUpdateRemoteCSE.Click += new System.EventHandler(this.btnUpdateRemoteCSE_Click);
             // 
             // Form1
             // 
@@ -365,6 +377,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox tbDeviceEntityID;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnUpdateRemoteCSE;
     }
 }
 
