@@ -41,6 +41,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tbSvcCd = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbremoteCSEName = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.lbEnrmtKeyId = new System.Windows.Forms.Label();
             this.lbEnrmtKey = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -51,6 +53,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tbSeverPort = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.tbSeverIP = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.btnDelRemoteCSE = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -62,16 +68,12 @@
             this.tbDeviceCTN = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnDeviceStatusCheck = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbLwM2MEntityID = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.tbSeverIP = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.tbSeverPort = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
+            this.tbLwM2MData = new System.Windows.Forms.TextBox();
+            this.btnLwM2MData = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -118,9 +120,9 @@
             // 
             // btnSetRemoteCSE
             // 
-            this.btnSetRemoteCSE.Location = new System.Drawing.Point(349, 101);
+            this.btnSetRemoteCSE.Location = new System.Drawing.Point(340, 101);
             this.btnSetRemoteCSE.Name = "btnSetRemoteCSE";
-            this.btnSetRemoteCSE.Size = new System.Drawing.Size(118, 46);
+            this.btnSetRemoteCSE.Size = new System.Drawing.Size(127, 46);
             this.btnSetRemoteCSE.TabIndex = 0;
             this.btnSetRemoteCSE.Text = "CSR 생성";
             this.btnSetRemoteCSE.UseVisualStyleBackColor = true;
@@ -128,9 +130,9 @@
             // 
             // btnMEFAuth
             // 
-            this.btnMEFAuth.Location = new System.Drawing.Point(33, 127);
+            this.btnMEFAuth.Location = new System.Drawing.Point(33, 112);
             this.btnMEFAuth.Name = "btnMEFAuth";
-            this.btnMEFAuth.Size = new System.Drawing.Size(215, 23);
+            this.btnMEFAuth.Size = new System.Drawing.Size(163, 34);
             this.btnMEFAuth.TabIndex = 0;
             this.btnMEFAuth.Text = "MEF 인증";
             this.btnMEFAuth.UseVisualStyleBackColor = true;
@@ -189,6 +191,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lbremoteCSEName);
+            this.groupBox1.Controls.Add(this.label17);
             this.groupBox1.Controls.Add(this.lbEnrmtKeyId);
             this.groupBox1.Controls.Add(this.btnMEFAuth);
             this.groupBox1.Controls.Add(this.tbSvcCd);
@@ -210,6 +214,24 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "MEF";
+            // 
+            // lbremoteCSEName
+            // 
+            this.lbremoteCSEName.Location = new System.Drawing.Point(317, 130);
+            this.lbremoteCSEName.Name = "lbremoteCSEName";
+            this.lbremoteCSEName.Size = new System.Drawing.Size(304, 16);
+            this.lbremoteCSEName.TabIndex = 10;
+            this.lbremoteCSEName.Text = "svr.remoteCSEName";
+            this.lbremoteCSEName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label17
+            // 
+            this.label17.Location = new System.Drawing.Point(202, 130);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(113, 20);
+            this.label17.TabIndex = 9;
+            this.label17.Text = "svr.CSR = ";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbEnrmtKeyId
             // 
@@ -302,12 +324,46 @@
             this.groupBox2.Controls.Add(this.btnGetCSEBase);
             this.groupBox2.Controls.Add(this.btnSetRemoteCSE);
             this.groupBox2.Controls.Add(this.btnGetRemoteCSE);
-            this.groupBox2.Location = new System.Drawing.Point(654, 219);
+            this.groupBox2.Location = new System.Drawing.Point(654, 217);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(615, 163);
+            this.groupBox2.Size = new System.Drawing.Size(613, 178);
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "CSE";
+            // 
+            // tbSeverPort
+            // 
+            this.tbSeverPort.Location = new System.Drawing.Point(116, 127);
+            this.tbSeverPort.Name = "tbSeverPort";
+            this.tbSeverPort.Size = new System.Drawing.Size(205, 21);
+            this.tbSeverPort.TabIndex = 14;
+            this.tbSeverPort.Text = "8180";
+            // 
+            // label15
+            // 
+            this.label15.Location = new System.Drawing.Point(23, 126);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(94, 22);
+            this.label15.TabIndex = 13;
+            this.label15.Text = "서비스서버 port";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tbSeverIP
+            // 
+            this.tbSeverIP.Location = new System.Drawing.Point(115, 102);
+            this.tbSeverIP.Name = "tbSeverIP";
+            this.tbSeverIP.Size = new System.Drawing.Size(206, 21);
+            this.tbSeverIP.TabIndex = 12;
+            this.tbSeverIP.Text = "http://172.17.224.57";
+            // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(22, 101);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(94, 22);
+            this.label10.TabIndex = 11;
+            this.label10.Text = "서비스서버 IP";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnDelRemoteCSE
             // 
@@ -331,7 +387,7 @@
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.tbData);
             this.groupBox3.Controls.Add(this.btnSendData);
-            this.groupBox3.Location = new System.Drawing.Point(654, 410);
+            this.groupBox3.Location = new System.Drawing.Point(654, 424);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(613, 163);
             this.groupBox3.TabIndex = 28;
@@ -413,27 +469,28 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.button3);
+            this.groupBox4.Controls.Add(this.btnDeviceStatusCheck);
             this.groupBox4.Controls.Add(this.label14);
-            this.groupBox4.Controls.Add(this.textBox2);
+            this.groupBox4.Controls.Add(this.tbLwM2MEntityID);
             this.groupBox4.Controls.Add(this.label11);
-            this.groupBox4.Controls.Add(this.textBox3);
-            this.groupBox4.Controls.Add(this.button1);
-            this.groupBox4.Location = new System.Drawing.Point(654, 602);
+            this.groupBox4.Controls.Add(this.tbLwM2MData);
+            this.groupBox4.Controls.Add(this.btnLwM2MData);
+            this.groupBox4.Location = new System.Drawing.Point(654, 617);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(613, 111);
             this.groupBox4.TabIndex = 29;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "LwM2M Device DATA";
             // 
-            // button3
+            // btnDeviceStatusCheck
             // 
-            this.button3.Location = new System.Drawing.Point(340, 35);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(126, 23);
-            this.button3.TabIndex = 18;
-            this.button3.Text = "상태조회(단말)";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnDeviceStatusCheck.Location = new System.Drawing.Point(340, 35);
+            this.btnDeviceStatusCheck.Name = "btnDeviceStatusCheck";
+            this.btnDeviceStatusCheck.Size = new System.Drawing.Size(126, 23);
+            this.btnDeviceStatusCheck.TabIndex = 18;
+            this.btnDeviceStatusCheck.Text = "상태조회(단말)";
+            this.btnDeviceStatusCheck.UseVisualStyleBackColor = true;
+            this.btnDeviceStatusCheck.Click += new System.EventHandler(this.btnDeviceStatusCheck_Click);
             // 
             // label14
             // 
@@ -444,12 +501,13 @@
             this.label14.Text = "DATA(text)";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // textBox2
+            // tbLwM2MEntityID
             // 
-            this.textBox2.Location = new System.Drawing.Point(114, 37);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(205, 21);
-            this.textBox2.TabIndex = 14;
+            this.tbLwM2MEntityID.Location = new System.Drawing.Point(114, 37);
+            this.tbLwM2MEntityID.Name = "tbLwM2MEntityID";
+            this.tbLwM2MEntityID.Size = new System.Drawing.Size(205, 21);
+            this.tbLwM2MEntityID.TabIndex = 14;
+            this.tbLwM2MEntityID.Text = "ASN_CSE-D-6399301537-CATM";
             // 
             // label11
             // 
@@ -460,56 +518,23 @@
             this.label11.Text = "Device EntityID";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // textBox3
+            // tbLwM2MData
             // 
-            this.textBox3.Location = new System.Drawing.Point(113, 68);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(352, 21);
-            this.textBox3.TabIndex = 12;
-            this.textBox3.Text = "1234";
+            this.tbLwM2MData.Location = new System.Drawing.Point(113, 68);
+            this.tbLwM2MData.Name = "tbLwM2MData";
+            this.tbLwM2MData.Size = new System.Drawing.Size(352, 21);
+            this.tbLwM2MData.TabIndex = 12;
+            this.tbLwM2MData.Text = "1234";
             // 
-            // button1
+            // btnLwM2MData
             // 
-            this.button1.Location = new System.Drawing.Point(472, 66);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(127, 23);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "데이터 보내기";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // tbSeverIP
-            // 
-            this.tbSeverIP.Location = new System.Drawing.Point(115, 102);
-            this.tbSeverIP.Name = "tbSeverIP";
-            this.tbSeverIP.Size = new System.Drawing.Size(206, 21);
-            this.tbSeverIP.TabIndex = 12;
-            this.tbSeverIP.Text = "http://172.17.224.57";
-            // 
-            // label10
-            // 
-            this.label10.Location = new System.Drawing.Point(22, 101);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(94, 22);
-            this.label10.TabIndex = 11;
-            this.label10.Text = "서비스서버 IP";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tbSeverPort
-            // 
-            this.tbSeverPort.Location = new System.Drawing.Point(116, 127);
-            this.tbSeverPort.Name = "tbSeverPort";
-            this.tbSeverPort.Size = new System.Drawing.Size(205, 21);
-            this.tbSeverPort.TabIndex = 14;
-            this.tbSeverPort.Text = "8180";
-            // 
-            // label15
-            // 
-            this.label15.Location = new System.Drawing.Point(23, 126);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(94, 22);
-            this.label15.TabIndex = 13;
-            this.label15.Text = "서비스서버 port";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLwM2MData.Location = new System.Drawing.Point(472, 66);
+            this.btnLwM2MData.Name = "btnLwM2MData";
+            this.btnLwM2MData.Size = new System.Drawing.Size(127, 23);
+            this.btnLwM2MData.TabIndex = 11;
+            this.btnLwM2MData.Text = "데이터 보내기";
+            this.btnLwM2MData.UseVisualStyleBackColor = true;
+            this.btnLwM2MData.Click += new System.EventHandler(this.btnLwM2MData_Click);
             // 
             // Form1
             // 
@@ -571,19 +596,21 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbLwM2MEntityID;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox tbLwM2MData;
+        private System.Windows.Forms.Button btnLwM2MData;
         private System.Windows.Forms.ComboBox cboneM2MModel;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btnDataRetrive;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnDeviceStatusCheck;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox tbSeverPort;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox tbSeverIP;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label lbremoteCSEName;
+        private System.Windows.Forms.Label label17;
     }
 }
 

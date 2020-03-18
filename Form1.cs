@@ -65,11 +65,11 @@ namespace HttpServer
         private void btnMEFAuth_Click(object sender, EventArgs e)
         {
             svr.svcSvrCd = tbSvcSvrCd.Text; // 서비스 서버의 시퀀스
-            LogWrite("svr.svcSvrCd = " + svr.svcSvrCd);
+            //LogWrite("svr.svcSvrCd = " + svr.svcSvrCd);
             svr.svcCd = tbSvcCd.Text; // 서비스 서버의 서비스코드
-            LogWrite("svr.svcCd = " + svr.svcCd);
+            //LogWrite("svr.svcCd = " + svr.svcCd);
             svr.svcSvrNum = tbSvcSvrNum.Text; // 서비스 서버의 Number
-            LogWrite("svr.svcSvrNum = " + svr.svcSvrNum);
+            //LogWrite("svr.svcSvrNum = " + svr.svcSvrNum);
 
             if (svr.svcCd != string.Empty && svr.svcSvrCd != string.Empty && svr.svcSvrNum != string.Empty)
                 RequestMEF();
@@ -143,7 +143,35 @@ namespace HttpServer
         {
             LogWrite("----------DATA SEND----------");
             if (svr.enrmtKeyId != string.Empty)
-                SendDataToPlatform();
+            {
+                string target_comm = "oneM2M";
+                SendDataToPlatform(target_comm);
+            }
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
+        // 데이터 송신
+        private void btnLwM2MData_Click(object sender, EventArgs e)
+        {
+            LogWrite("----------DATA SEND----------");
+            if (svr.enrmtKeyId != string.Empty)
+            {
+                string target_comm = "LwM2M";
+                SendDataToPlatform(target_comm);
+            }
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
+        // LwM2M Device Status Check
+        private void btnDeviceStatusCheck_Click(object sender, EventArgs e)
+        {
+            LogWrite("----------DEVICE STATUS CHECK----------");
+            if (svr.enrmtKeyId != string.Empty)
+            {
+                DeviceCheckToPlatform();
+            }
             else
                 LogWrite("서버인증파라미터 세팅하세요");
         }
@@ -174,11 +202,10 @@ namespace HttpServer
             {
                 ParsingXml(retStr);
 
-                // svr.remoteCSEName이 없다면 remoteCSE 생성
-                // ReqRemoteCSECreate();
                 string nameCSR = svr.entityId.Replace("-","");
-                svr.remoteCSEName = "csr-" + nameCSR;
-                LogWrite("svr.remoteCSEName = " + svr.remoteCSEName);
+                lbremoteCSEName.Text = "csr-" + nameCSR;
+                svr.remoteCSEName = lbremoteCSEName.Text;
+                //LogWrite("svr.remoteCSEName = " + svr.remoteCSEName);
             }
         }
 
@@ -186,6 +213,8 @@ namespace HttpServer
         {
             XmlDocument xDoc = new XmlDocument();
             xDoc.LoadXml(xml);
+            //LogWrite(xDoc.OuterXml.ToString());
+
             XmlNodeList xnList = xDoc.SelectNodes("/authdata/http"); //접근할 노드
             foreach (XmlNode xn in xnList)
             {
@@ -193,9 +222,9 @@ namespace HttpServer
                 svr.entityId = xn["entityId"].InnerText; // oneM2M에서 사용하는 단말 ID
                 svr.token = xn["token"].InnerText; // 인증구간 통신을 위해 발급하는 Token
             }
-            LogWrite("enrmtKey = " + svr.enrmtKey);
-            LogWrite("entityId = " + svr.entityId);
-            LogWrite("token = " + svr.token);
+            //LogWrite("enrmtKey = " + svr.enrmtKey);
+            //LogWrite("entityId = " + svr.entityId);
+            //LogWrite("token = " + svr.token);
             lbEnrmtKey.Text = svr.enrmtKey;
             lbEntityId.Text = svr.entityId;
             lbToken.Text = svr.token;
@@ -244,7 +273,7 @@ namespace HttpServer
 
             lbEnrmtKeyId.Text = enrmtKeyId;
             svr.enrmtKeyId = enrmtKeyId;
-            LogWrite("svr.enrmtKeyId = " + svr.enrmtKeyId);
+            //LogWrite("svr.enrmtKeyId = " + svr.enrmtKeyId);
         }
 
         // 2. CSEBase-GET : oneM2M 접속 확인
@@ -260,8 +289,8 @@ namespace HttpServer
             header.X_MEF_EKI = svr.enrmtKeyId;
             header.X_M2M_NM = string.Empty;
             string retStr = SendHttpRequest(header, string.Empty);
-            if (retStr != string.Empty)
-                LogWrite(retStr);
+            //if (retStr != string.Empty)
+            //    LogWrite(retStr);
         }
 
         // 3. RemoteCSE-Get
@@ -277,8 +306,8 @@ namespace HttpServer
             header.X_MEF_EKI = svr.enrmtKeyId;
             header.X_M2M_NM = string.Empty;
             string retStr = SendHttpRequest(header, string.Empty);
-            if (retStr != string.Empty)
-                LogWrite(retStr);
+            //if (retStr != string.Empty)
+            //    LogWrite(retStr);
         }
 
         // 3. RemoteCSE-Create
@@ -301,16 +330,16 @@ namespace HttpServer
             obj.Add("csi", "/" + svr.entityId);
             obj.Add("rr", "true");
             var arr = new JArray();
-            arr.Add("http://172.17.224.57:8180");
-            // arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
+            //arr.Add("http://172.17.224.57:8180");
+            arr.Add("http://" + tbSeverIP.Text + ":" + tbSeverPort.Text);
             obj.Add("poa", arr);
             //LogWriteobj.ToString());
             string retStr = SendHttpRequest(header, obj.ToString());
-            if (retStr != string.Empty)
-            {
-                LogWrite(retStr);
-                // 이미 같은 이름으로 생성되어 있다면 응답 : {"message": "CONFLICT_INVALID_RESOURCE_NAME"}
-            }
+            //if (retStr != string.Empty)
+            //{
+            //    LogWrite(retStr);
+            //    // 이미 같은 이름으로 생성되어 있다면 응답 : {"message": "CONFLICT_INVALID_RESOURCE_NAME"}
+            //}
         }
 
         // 3. RemoteCSE-Update
@@ -328,17 +357,14 @@ namespace HttpServer
             header.X_M2M_NM = string.Empty;
 
             var obj = new JObject();
-         var arr = new JArray();
-            arr.Add("http://172.17.224.57:8180");
-            //arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
+            var arr = new JArray();
+            //arr.Add("http://172.17.224.57:8180");
+            arr.Add("http://" + tbSeverIP.Text + ":" + tbSeverPort.Text);
             obj.Add("poa", arr);
             //LogWriteobj.ToString());
             string retStr = SendHttpRequest(header, obj.ToString());
-            if (retStr != string.Empty)
-            {
-                LogWrite(retStr);
-                // 이미 같은 이름으로 생성되어 있다면 응답 : {"message": "CONFLICT_INVALID_RESOURCE_NAME"}
-            }
+            //if (retStr != string.Empty)
+            //    LogWrite(retStr);
         }
 
         // 3. RemoteCSE-Delete
@@ -354,8 +380,8 @@ namespace HttpServer
             header.X_MEF_EKI = svr.enrmtKeyId;
             header.X_M2M_NM = string.Empty;
             string retStr = SendHttpRequest(header, string.Empty);
-            if (retStr != string.Empty)
-                LogWrite(retStr);
+            //if (retStr != string.Empty)
+            //    LogWrite(retStr);
         }
 
         private void RetriveDataToPlatform()
@@ -363,7 +389,6 @@ namespace HttpServer
             ReqHeader header = new ReqHeader();
             //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP/la";
             header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text +"/la";
-            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
             header.Method = "GET";
             header.X_M2M_Origin = svr.entityId;
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data_retrive";
@@ -374,16 +399,23 @@ namespace HttpServer
             header.ContentType = string.Empty;
 
             string retStr = SendHttpRequest(header, string.Empty);
-            if (retStr != string.Empty)
-                LogWrite(retStr);
+            //if (retStr != string.Empty)
+            //    LogWrite(retStr);
         }
 
-        private void SendDataToPlatform()
+        private void SendDataToPlatform(string target_comm)
         {
             ReqHeader header = new ReqHeader();
-            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
-            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text;
-            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
+            if(target_comm == "oneM2M")
+            {
+                //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
+                header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text;
+            }
+            else
+            {
+                header.Url = brkUrlL + "/" + tbLwM2MEntityID.Text + "/10250/0/1";
+                //header.Url = brkUrlL + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
+            }
             header.Method = "POST";
             header.X_M2M_Origin = svr.entityId;
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data_send";
@@ -398,8 +430,26 @@ namespace HttpServer
             packetStr += "<con>" + tbData.Text + "</con>";
             packetStr += "</m2m:cin>";
             string retStr = SendHttpRequest(header, packetStr);
-            if (retStr != string.Empty)
-                LogWrite(retStr);
+            //if (retStr != string.Empty)
+            //    LogWrite(retStr);
+        }
+
+        private void DeviceCheckToPlatform()
+        {
+            ReqHeader header = new ReqHeader();
+            header.Url = brkUrlL + "/" + tbLwM2MEntityID.Text + "/10250/0/0";
+            header.Method = "GET";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "device_status";
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            header.X_M2M_NM = string.Empty;
+            header.Accept = "application/vnd.onem2m-res+xml";
+            header.ContentType = "application/vnd.onem2m-res+xml;ty=4";
+
+            string retStr = SendHttpRequest(header, string.Empty);
+            //if (retStr != string.Empty)
+            //    LogWrite(retStr);
         }
 
         public string SendHttpRequest(ReqHeader header, string data)
@@ -425,9 +475,13 @@ namespace HttpServer
                 if (header.X_MEF_EKI != string.Empty)
                     wReq.Headers.Add("X-MEF-EKI", header.X_MEF_EKI);
 
+                LogWriteNoTime(wReq.Method + " " + wReq.RequestUri + " HTTP/1.1");
+                LogWriteNoTime("");
                 for (int i = 0; i < wReq.Headers.Count; ++i)
-                    LogWrite("[" + wReq.Headers.Keys[i] + "] " + wReq.Headers[i]);
-                LogWrite(data);
+                    LogWriteNoTime(wReq.Headers.Keys[i] + ": " + wReq.Headers[i]);
+                LogWriteNoTime("");
+                LogWriteNoTime(data);
+                LogWriteNoTime("");
 
                 // POST 전송일 경우      
                 if (header.Method == "POST")
@@ -438,16 +492,21 @@ namespace HttpServer
                     dataStream.Close();
                 }
 
-                LogWrite("----------Response DATA----------");
+                LogWrite("----------Response from oneM2M----------");
                 wReq.Timeout = 20000;          // 서버 응답을 20초동안 기다림
                 using (wRes = (HttpWebResponse)wReq.GetResponse())
                 {
-                    LogWrite("[" + (int)wRes.StatusCode + "] " + wRes.StatusCode.ToString());
+                    LogWriteNoTime("HTTP/1.1 " + (int)wRes.StatusCode + " " + wRes.StatusCode.ToString());
+                    LogWriteNoTime("");
                     for (int i = 0; i < wRes.Headers.Count; ++i)
-                        LogWrite("[" + wRes.Headers.Keys[i] + "] " + wRes.Headers[i]);
+                        LogWriteNoTime("[" + wRes.Headers.Keys[i] + "] " + wRes.Headers[i]);
+                    LogWriteNoTime("");
+
                     Stream respPostStream = wRes.GetResponseStream();
                     StreamReader readerPost = new StreamReader(respPostStream, Encoding.GetEncoding("UTF-8"), true);
                     resResult = readerPost.ReadToEnd();
+                    LogWriteNoTime(resResult);
+                    LogWriteNoTime("");
                 }
                 return resResult;
             }
@@ -456,7 +515,18 @@ namespace HttpServer
                 if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
                 {
                     var resp = (HttpWebResponse)ex.Response;
-                    LogWrite("[" + (int)resp.StatusCode + "] " + resp.StatusCode.ToString());
+                    LogWriteNoTime("HTTP/1.1 " + (int)resp.StatusCode + " " + resp.StatusCode.ToString());
+                    LogWriteNoTime("");
+                    for (int i = 0; i < resp.Headers.Count; ++i)
+                        LogWriteNoTime(" " + resp.Headers.Keys[i] + ": " + resp.Headers[i]);
+                    LogWriteNoTime("");
+
+                    Stream respPostStream = resp.GetResponseStream();
+                    StreamReader readerPost = new StreamReader(respPostStream, Encoding.GetEncoding("UTF-8"), true);
+                    string resError = readerPost.ReadToEnd();
+                    LogWriteNoTime(resError);
+                    LogWriteNoTime("");
+                    //LogWrite("[" + (int)resp.StatusCode + "] " + resp.StatusCode.ToString());
                 }
                 else
                 {
@@ -474,6 +544,20 @@ namespace HttpServer
                     tbLog.Text = string.Empty;
                 tbLog.AppendText(Environment.NewLine);
                 tbLog.AppendText(DateTime.Now.ToString("MM/dd HH:mm:ss ") + data);
+                tbLog.SelectionStart = tbLog.TextLength;
+                tbLog.ScrollToCaret();
+            }));
+        }
+
+        private void LogWriteNoTime(string data)
+        {
+            BeginInvoke(new Action(() =>
+            {
+                if (tbLog.TextLength > 5000)
+                    tbLog.Text = string.Empty;
+                tbLog.AppendText(Environment.NewLine);
+                data = data.Replace("><", ">" + Environment.NewLine + "<");         // xml tag 위치에 줄바꿈 삽입
+                tbLog.AppendText(" " + data);
                 tbLog.SelectionStart = tbLog.TextLength;
                 tbLog.ScrollToCaret();
             }));
