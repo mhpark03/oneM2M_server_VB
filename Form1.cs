@@ -31,7 +31,8 @@ namespace HttpServer
         HttpWebRequest wReq;
         HttpWebResponse wRes;
 
-        string brkUrl = "https://testbrks.onem2m.uplus.co.kr:8443"; // BRK(개발기)       
+        string brkUrl = "https://testbrk.onem2m.uplus.co.kr:443"; // BRK(oneM2M 개발기)       
+        string brkUrlL = "https://testbrks.onem2m.uplus.co.kr:8443"; // BRK(LwM2M 개발기)       
         string mefUrl = "https://testmef.onem2m.uplus.co.kr:443"; // MEF(개발기)
         
         ServiceServer svr = new ServiceServer();
@@ -123,6 +124,16 @@ namespace HttpServer
             LogWrite("----------remoteCSE DEL----------");
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSEDEL();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
+        // 데이터 수신 (oneM2M 플랫폼 DB)
+        private void btnDataRetrive_Click(object sender, EventArgs e)
+        {
+            LogWrite("----------DATA RECIEVE----------");
+            if (svr.enrmtKeyId != string.Empty)
+                RetriveDataToPlatform();
             else
                 LogWrite("서버인증파라미터 세팅하세요");
         }
@@ -290,7 +301,7 @@ namespace HttpServer
             obj.Add("csi", "/" + svr.entityId);
             obj.Add("rr", "true");
             var arr = new JArray();
-            arr.Add("http://172.17.224.57:8081");
+            arr.Add("http://172.17.224.57:8180");
             // arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
             obj.Add("poa", arr);
             //LogWriteobj.ToString());
@@ -318,7 +329,7 @@ namespace HttpServer
 
             var obj = new JObject();
          var arr = new JArray();
-            arr.Add("http://172.17.224.57:8081");
+            arr.Add("http://172.17.224.57:8180");
             //arr.Add("http://" + ServiceServerIp + ":" + ServiceServerPort);
             obj.Add("poa", arr);
             //LogWriteobj.ToString());
@@ -347,11 +358,31 @@ namespace HttpServer
                 LogWrite(retStr);
         }
 
+        private void RetriveDataToPlatform()
+        {
+            ReqHeader header = new ReqHeader();
+            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP/la";
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text +"/la";
+            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
+            header.Method = "GET";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data_retrive";
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            header.X_M2M_NM = string.Empty;
+            header.Accept = "application/xml";
+            header.ContentType = string.Empty;
+
+            string retStr = SendHttpRequest(header, string.Empty);
+            if (retStr != string.Empty)
+                LogWrite(retStr);
+        }
+
         private void SendDataToPlatform()
         {
             ReqHeader header = new ReqHeader();
-            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
-            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + tbDeviceEntityID.Text + "/cnt-" + tbContainer.Text;
+            //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text;
             //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
             header.Method = "POST";
             header.X_M2M_Origin = svr.entityId;
