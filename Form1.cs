@@ -375,7 +375,7 @@ namespace HttpServer
         {
             ReqHeader header = new ReqHeader();
             header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/"+svr.remoteCSEName;
-            header.Method = "UPDATE";
+            header.Method = "PUT";
             header.Accept = "application/vnd.onem2m-res+json";
             header.ContentType = "application/vnd.onem2m-res+json";
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "RemoteCSE_Update";
@@ -384,13 +384,15 @@ namespace HttpServer
             header.X_MEF_EKI = svr.enrmtKeyId;
             header.X_M2M_NM = string.Empty;
 
-            var obj = new JObject();
-            var arr = new JArray();
-            //arr.Add("http://172.17.224.57:8180");
-            arr.Add("http://" + tbSeverIP.Text + ":" + tbSeverPort.Text);
-            obj.Add("poa", arr);
-            //LogWriteobj.ToString());
-            string retStr = SendHttpRequest(header, obj.ToString());
+            string packetStr = "<m2m:csr xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
+            packetStr += "<cst>3</cst>";
+            packetStr += "<cb>/" + svr.entityId + "</cb>";
+            packetStr += "<csi>/" + svr.entityId + "/cb-1</csi>";
+            packetStr += "<rr>true</rr>";
+            packetStr += "<poa>" + tbSeverIP.Text + ":" + tbSeverPort.Text + "</poa>";
+            packetStr += "</m2m:csr>";
+
+            string retStr = SendHttpRequest(header, packetStr);
             //if (retStr != string.Empty)
             //    LogWrite(retStr);
         }
@@ -434,7 +436,7 @@ namespace HttpServer
 
                 XmlDocument xDoc = new XmlDocument();
                 xDoc.LoadXml(retStr);
-                LogWrite(xDoc.OuterXml.ToString());
+                //LogWrite(xDoc.OuterXml.ToString());
 
                 XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
                 foreach (XmlNode xn in xnList)
@@ -504,7 +506,7 @@ namespace HttpServer
 
                 XmlDocument xDoc = new XmlDocument();
                 xDoc.LoadXml(retStr);
-                LogWrite(xDoc.OuterXml.ToString());
+                //LogWrite(xDoc.OuterXml.ToString());
 
                 XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
                 foreach (XmlNode xn in xnList)

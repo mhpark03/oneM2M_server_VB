@@ -53,6 +53,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnUpdateRemoteCSE = new System.Windows.Forms.Button();
+            this.btnServer = new System.Windows.Forms.Button();
             this.tbSeverPort = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.tbSeverIP = new System.Windows.Forms.TextBox();
@@ -78,7 +80,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.tbLwM2MData = new System.Windows.Forms.TextBox();
             this.btnLwM2MData = new System.Windows.Forms.Button();
-            this.btnServer = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -321,6 +322,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnUpdateRemoteCSE);
             this.groupBox2.Controls.Add(this.btnServer);
             this.groupBox2.Controls.Add(this.tbSeverPort);
             this.groupBox2.Controls.Add(this.label15);
@@ -336,6 +338,26 @@
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "CSE";
+            // 
+            // btnUpdateRemoteCSE
+            // 
+            this.btnUpdateRemoteCSE.Location = new System.Drawing.Point(340, 73);
+            this.btnUpdateRemoteCSE.Name = "btnUpdateRemoteCSE";
+            this.btnUpdateRemoteCSE.Size = new System.Drawing.Size(118, 23);
+            this.btnUpdateRemoteCSE.TabIndex = 16;
+            this.btnUpdateRemoteCSE.Text = "CSR 수정";
+            this.btnUpdateRemoteCSE.UseVisualStyleBackColor = true;
+            this.btnUpdateRemoteCSE.Click += new System.EventHandler(this.btnUpdateRemoteCSE_Click);
+            // 
+            // btnServer
+            // 
+            this.btnServer.Location = new System.Drawing.Point(480, 102);
+            this.btnServer.Name = "btnServer";
+            this.btnServer.Size = new System.Drawing.Size(127, 46);
+            this.btnServer.TabIndex = 15;
+            this.btnServer.Text = "서버 시작";
+            this.btnServer.UseVisualStyleBackColor = true;
+            this.btnServer.Click += new System.EventHandler(this.btnServer_Click);
             // 
             // tbSeverPort
             // 
@@ -442,12 +464,13 @@
             // 
             this.cboneM2MModel.FormattingEnabled = true;
             this.cboneM2MModel.Items.AddRange(new object[] {
-            "AMM5400LG"});
+            "AMM5400LG",
+            "TM800"});
             this.cboneM2MModel.Location = new System.Drawing.Point(113, 20);
             this.cboneM2MModel.Name = "cboneM2MModel";
             this.cboneM2MModel.Size = new System.Drawing.Size(205, 20);
             this.cboneM2MModel.TabIndex = 13;
-            this.cboneM2MModel.Text = "AMM5400LG";
+            this.cboneM2MModel.Text = "TM800";
             // 
             // label12
             // 
@@ -481,7 +504,7 @@
             this.tbDeviceCTN.Name = "tbDeviceCTN";
             this.tbDeviceCTN.Size = new System.Drawing.Size(205, 21);
             this.tbDeviceCTN.TabIndex = 8;
-            this.tbDeviceCTN.Text = "01222990847";
+            this.tbDeviceCTN.Text = "01222990944";
             // 
             // label8
             // 
@@ -580,16 +603,6 @@
             this.btnLwM2MData.UseVisualStyleBackColor = true;
             this.btnLwM2MData.Click += new System.EventHandler(this.btnLwM2MData_Click);
             // 
-            // btnServer
-            // 
-            this.btnServer.Location = new System.Drawing.Point(480, 102);
-            this.btnServer.Name = "btnServer";
-            this.btnServer.Size = new System.Drawing.Size(127, 46);
-            this.btnServer.TabIndex = 15;
-            this.btnServer.Text = "서버 시작";
-            this.btnServer.UseVisualStyleBackColor = true;
-            this.btnServer.Click += new System.EventHandler(this.btnServer_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -670,6 +683,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label lbLwM2MRxData;
         private System.Windows.Forms.Button btnServer;
+        private System.Windows.Forms.Button btnUpdateRemoteCSE;
     }
 }
 
