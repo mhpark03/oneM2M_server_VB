@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Xml;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 
 /*
 * 8000번 포트 리스닝을 위한 선행 작업 
@@ -25,25 +26,16 @@ namespace HttpServer
 {
     public partial class Form1 : Form
     {
-        string ServiceServerIp = "123.123.123.123"; // LG U+ 플랫폼 연동 서비스 서버 IP
-        int ServiceServerPort = 8000; // LG U+ 플랫폼 연동 서비스 서버 Port
-
         HttpWebRequest wReq;
         HttpWebResponse wRes;
 
         string brkUrl = "https://testbrk.onem2m.uplus.co.kr:443"; // BRK(oneM2M 개발기)       
         string brkUrlL = "https://testbrks.onem2m.uplus.co.kr:8443"; // BRK(LwM2M 개발기)       
         string mefUrl = "https://testmef.onem2m.uplus.co.kr:443"; // MEF(개발기)
+
+        string svrState = "STOP";
         
         ServiceServer svr = new ServiceServer();
-
-        /* 초기작업
-         * 1. CSEBase-GET : oneM2M 접속 확인
-         * 2. MEF 인증 : 서버 Entity ID 및 토큰 가져오기
-         * 3. RemoteCSE 생성 및 조회 : 서버주소 및 포트 설정
-         */
-
-        string deviceEntityId = "ASN_CSE-D-e857a2c3ed-DMTL"; // 테스트용 디바이스
 
         public Form1()
         {
@@ -52,13 +44,15 @@ namespace HttpServer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            StartHttpServer();
             svr.enrmtKeyId = string.Empty;
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            StopHttpServer();
+            if (svrState != "STOP")
+            {
+                StopHttpServer();
+            }
         }
 
         // MEF Auth
@@ -124,6 +118,28 @@ namespace HttpServer
             LogWrite("----------remoteCSE DEL----------");
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSEDEL();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
+        private void btnServer_Click(object sender, EventArgs e)
+        {
+            LogWrite("----------서비스 서버 설정----------");
+            if (svr.enrmtKeyId != string.Empty)
+            {
+                if (svrState == "STOP")
+                {
+                    StartHttpServer();
+                    svrState = "RUN";
+                    btnServer.Text = "서버 동작중(중지)";
+                }
+                else
+                {
+                    StopHttpServer();
+                    svrState = "STOP";
+                    btnServer.Text = "서버 시작";
+                }
+            }
             else
                 LogWrite("서버인증파라미터 세팅하세요");
         }
@@ -316,14 +332,25 @@ namespace HttpServer
             ReqHeader header = new ReqHeader();
             header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1";
             header.Method = "POST";
-            header.Accept = "application/vnd.onem2m-res+json";
-            header.ContentType = "application/vnd.onem2m-res+json;ty=16";
+            header.Accept = "application/vnd.onem2m-res+xml";
+            header.ContentType = "application/vnd.onem2m-res+xml;ty=16";
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "RemoteCSE_Create";
             header.X_M2M_Origin = svr.entityId;
             header.X_MEF_TK = svr.token;
             header.X_MEF_EKI = svr.enrmtKeyId;
             header.X_M2M_NM = svr.remoteCSEName;
 
+            string packetStr = "<m2m:csr xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
+            packetStr += "<cst>3</cst>";
+            packetStr += "<cb>/" + svr.entityId + "</cb>";
+            packetStr += "<csi>/" + svr.entityId + "/cb-1</csi>";
+            packetStr += "<rr>true</rr>";
+            packetStr += "<poa>" + tbSeverIP.Text + ":" + tbSeverPort.Text + "</poa>";
+            packetStr += "</m2m:csr>";
+
+            string retStr = SendHttpRequest(header, packetStr);
+
+            /*
             var obj = new JObject();
             obj.Add("cst", "3");
             obj.Add("cb", "/" + svr.entityId + "/cb-1");
@@ -335,6 +362,7 @@ namespace HttpServer
             obj.Add("poa", arr);
             //LogWriteobj.ToString());
             string retStr = SendHttpRequest(header, obj.ToString());
+            */
             //if (retStr != string.Empty)
             //{
             //    LogWrite(retStr);
@@ -399,8 +427,29 @@ namespace HttpServer
             header.ContentType = string.Empty;
 
             string retStr = SendHttpRequest(header, string.Empty);
-            //if (retStr != string.Empty)
-            //    LogWrite(retStr);
+            if (retStr != string.Empty)
+            {
+                string format = string.Empty;
+                string value = string.Empty;
+
+                XmlDocument xDoc = new XmlDocument();
+                xDoc.LoadXml(retStr);
+                LogWrite(xDoc.OuterXml.ToString());
+
+                XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
+                foreach (XmlNode xn in xnList)
+                {
+                    format = xn["cnf"].InnerText; // data format
+                    value = xn["con"].InnerText; // data value
+                }
+                //LogWrite("value = " + value);
+                //LogWrite("format = " + format);
+
+                if (format == "application/octet-stream")
+                    lboneM2MRxData.Text = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+                else
+                    lboneM2MRxData.Text = value;
+            }
         }
 
         private void SendDataToPlatform(string target_comm)
@@ -448,8 +497,29 @@ namespace HttpServer
             header.ContentType = "application/vnd.onem2m-res+xml;ty=4";
 
             string retStr = SendHttpRequest(header, string.Empty);
-            //if (retStr != string.Empty)
-            //    LogWrite(retStr);
+            if (retStr != string.Empty)
+            {
+                string format = string.Empty;
+                string value = string.Empty;
+
+                XmlDocument xDoc = new XmlDocument();
+                xDoc.LoadXml(retStr);
+                LogWrite(xDoc.OuterXml.ToString());
+
+                XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
+                foreach (XmlNode xn in xnList)
+                {
+                    format = xn["cnf"].InnerText; // data format
+                    value = xn["con"].InnerText; // data value
+                }
+                //LogWrite("value = " + value);
+                //LogWrite("format = " + format);
+
+                if (format == "application/octet-stream")
+                    lbLwM2MRxData.Text = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+                else
+                    lbLwM2MRxData.Text = value;
+            }
         }
 
         public string SendHttpRequest(ReqHeader header, string data)
@@ -568,7 +638,7 @@ namespace HttpServer
         private void StartHttpServer()
         {
             listener = new HttpListener();
-            listener.Prefixes.Add("http://+:" + ServiceServerPort + "/");
+            listener.Prefixes.Add("http://+:" + tbSeverPort.Text + "/");
             listener.Start();
             listener.BeginGetContext(this.OnRequested, this.listener);
             LogWrite("StartHttpServer");

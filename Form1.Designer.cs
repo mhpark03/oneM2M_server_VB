@@ -59,6 +59,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.btnDelRemoteCSE = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.lboneM2MRxData = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.btnDataRetrive = new System.Windows.Forms.Button();
             this.cboneM2MModel = new System.Windows.Forms.ComboBox();
@@ -68,12 +70,15 @@
             this.tbDeviceCTN = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.lbLwM2MRxData = new System.Windows.Forms.Label();
             this.btnDeviceStatusCheck = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.tbLwM2MEntityID = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tbLwM2MData = new System.Windows.Forms.TextBox();
             this.btnLwM2MData = new System.Windows.Forms.Button();
+            this.btnServer = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -102,7 +107,7 @@
             // 
             // btnSendData
             // 
-            this.btnSendData.Location = new System.Drawing.Point(472, 114);
+            this.btnSendData.Location = new System.Drawing.Point(472, 141);
             this.btnSendData.Name = "btnSendData";
             this.btnSendData.Size = new System.Drawing.Size(126, 23);
             this.btnSendData.TabIndex = 3;
@@ -112,7 +117,7 @@
             // 
             // tbData
             // 
-            this.tbData.Location = new System.Drawing.Point(113, 115);
+            this.tbData.Location = new System.Drawing.Point(113, 142);
             this.tbData.Name = "tbData";
             this.tbData.Size = new System.Drawing.Size(353, 21);
             this.tbData.TabIndex = 4;
@@ -230,7 +235,7 @@
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(113, 20);
             this.label17.TabIndex = 9;
-            this.label17.Text = "svr.CSR = ";
+            this.label17.Text = "(CSR) = ";
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbEnrmtKeyId
@@ -257,7 +262,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(106, 16);
             this.label6.TabIndex = 6;
-            this.label6.Text = "svr.enrmtKey =";
+            this.label6.Text = "enrmtKey =";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbToken
@@ -275,7 +280,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(113, 20);
             this.label7.TabIndex = 6;
-            this.label7.Text = "svr.enrmtKeyId = ";
+            this.label7.Text = "(enrmtKeyId) = ";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label5
@@ -284,7 +289,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(106, 16);
             this.label5.TabIndex = 6;
-            this.label5.Text = "svr.token =";
+            this.label5.Text = "token =";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lbEntityId
@@ -302,7 +307,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(106, 16);
             this.label4.TabIndex = 6;
-            this.label4.Text = "svr.entityId =";
+            this.label4.Text = "entityId =";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tbLog
@@ -316,6 +321,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnServer);
             this.groupBox2.Controls.Add(this.tbSeverPort);
             this.groupBox2.Controls.Add(this.label15);
             this.groupBox2.Controls.Add(this.tbSeverIP);
@@ -324,7 +330,7 @@
             this.groupBox2.Controls.Add(this.btnGetCSEBase);
             this.groupBox2.Controls.Add(this.btnSetRemoteCSE);
             this.groupBox2.Controls.Add(this.btnGetRemoteCSE);
-            this.groupBox2.Location = new System.Drawing.Point(654, 217);
+            this.groupBox2.Location = new System.Drawing.Point(652, 203);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(613, 178);
             this.groupBox2.TabIndex = 27;
@@ -377,6 +383,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label18);
+            this.groupBox3.Controls.Add(this.lboneM2MRxData);
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Controls.Add(this.btnDataRetrive);
             this.groupBox3.Controls.Add(this.cboneM2MModel);
@@ -387,16 +395,33 @@
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.tbData);
             this.groupBox3.Controls.Add(this.btnSendData);
-            this.groupBox3.Location = new System.Drawing.Point(654, 424);
+            this.groupBox3.Location = new System.Drawing.Point(651, 399);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(613, 163);
+            this.groupBox3.Size = new System.Drawing.Size(613, 177);
             this.groupBox3.TabIndex = 28;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "oneM2M Device DATA";
             // 
+            // label18
+            // 
+            this.label18.Location = new System.Drawing.Point(273, 117);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(94, 22);
+            this.label18.TabIndex = 17;
+            this.label18.Text = "Recv DATA =";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lboneM2MRxData
+            // 
+            this.lboneM2MRxData.Location = new System.Drawing.Point(374, 116);
+            this.lboneM2MRxData.Name = "lboneM2MRxData";
+            this.lboneM2MRxData.Size = new System.Drawing.Size(224, 22);
+            this.lboneM2MRxData.TabIndex = 16;
+            this.lboneM2MRxData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // label13
             // 
-            this.label13.Location = new System.Drawing.Point(21, 115);
+            this.label13.Location = new System.Drawing.Point(21, 142);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(94, 22);
             this.label13.TabIndex = 15;
@@ -469,18 +494,37 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label16);
+            this.groupBox4.Controls.Add(this.lbLwM2MRxData);
             this.groupBox4.Controls.Add(this.btnDeviceStatusCheck);
             this.groupBox4.Controls.Add(this.label14);
             this.groupBox4.Controls.Add(this.tbLwM2MEntityID);
             this.groupBox4.Controls.Add(this.label11);
             this.groupBox4.Controls.Add(this.tbLwM2MData);
             this.groupBox4.Controls.Add(this.btnLwM2MData);
-            this.groupBox4.Location = new System.Drawing.Point(654, 617);
+            this.groupBox4.Location = new System.Drawing.Point(654, 601);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(613, 111);
+            this.groupBox4.Size = new System.Drawing.Size(613, 127);
             this.groupBox4.TabIndex = 29;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "LwM2M Device DATA";
+            // 
+            // label16
+            // 
+            this.label16.Location = new System.Drawing.Point(270, 61);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(94, 22);
+            this.label16.TabIndex = 20;
+            this.label16.Text = "Recv DATA =";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lbLwM2MRxData
+            // 
+            this.lbLwM2MRxData.Location = new System.Drawing.Point(371, 65);
+            this.lbLwM2MRxData.Name = "lbLwM2MRxData";
+            this.lbLwM2MRxData.Size = new System.Drawing.Size(224, 22);
+            this.lbLwM2MRxData.TabIndex = 19;
+            this.lbLwM2MRxData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnDeviceStatusCheck
             // 
@@ -494,7 +538,7 @@
             // 
             // label14
             // 
-            this.label14.Location = new System.Drawing.Point(19, 68);
+            this.label14.Location = new System.Drawing.Point(19, 92);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(94, 22);
             this.label14.TabIndex = 17;
@@ -520,7 +564,7 @@
             // 
             // tbLwM2MData
             // 
-            this.tbLwM2MData.Location = new System.Drawing.Point(113, 68);
+            this.tbLwM2MData.Location = new System.Drawing.Point(113, 92);
             this.tbLwM2MData.Name = "tbLwM2MData";
             this.tbLwM2MData.Size = new System.Drawing.Size(352, 21);
             this.tbLwM2MData.TabIndex = 12;
@@ -528,13 +572,23 @@
             // 
             // btnLwM2MData
             // 
-            this.btnLwM2MData.Location = new System.Drawing.Point(472, 66);
+            this.btnLwM2MData.Location = new System.Drawing.Point(472, 90);
             this.btnLwM2MData.Name = "btnLwM2MData";
             this.btnLwM2MData.Size = new System.Drawing.Size(127, 23);
             this.btnLwM2MData.TabIndex = 11;
             this.btnLwM2MData.Text = "데이터 보내기";
             this.btnLwM2MData.UseVisualStyleBackColor = true;
             this.btnLwM2MData.Click += new System.EventHandler(this.btnLwM2MData_Click);
+            // 
+            // btnServer
+            // 
+            this.btnServer.Location = new System.Drawing.Point(480, 102);
+            this.btnServer.Name = "btnServer";
+            this.btnServer.Size = new System.Drawing.Size(127, 46);
+            this.btnServer.TabIndex = 15;
+            this.btnServer.Text = "서버 시작";
+            this.btnServer.UseVisualStyleBackColor = true;
+            this.btnServer.Click += new System.EventHandler(this.btnServer_Click);
             // 
             // Form1
             // 
@@ -611,6 +665,11 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label lbremoteCSEName;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label lboneM2MRxData;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label lbLwM2MRxData;
+        private System.Windows.Forms.Button btnServer;
     }
 }
 
