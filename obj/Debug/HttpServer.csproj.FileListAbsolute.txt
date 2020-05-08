@@ -55,3 +55,14 @@ D:\VisualStudio\workspace\oneM2M_server_VB\bin\Debug\HttpServer.exe
 D:\VisualStudio\workspace\oneM2M_server_VB\bin\Debug\HttpServer.pdb
 D:\VisualStudio\workspace\oneM2M_server_VB\bin\Debug\Newtonsoft.Json.dll
 D:\VisualStudio\workspace\oneM2M_server_VB\obj\Debug\HttpServer.csproj.CopyComplete
+C:\oneM2M_server_VB\bin\Debug\HttpServer.exe.config
+C:\oneM2M_server_VB\bin\Debug\HttpServer.exe
+C:\oneM2M_server_VB\bin\Debug\HttpServer.pdb
+C:\oneM2M_server_VB\obj\Debug\HttpServer.csprojAssemblyReference.cache
+C:\oneM2M_server_VB\obj\Debug\HttpServer.Form1.resources
+C:\oneM2M_server_VB\obj\Debug\HttpServer.Properties.Resources.resources
+C:\oneM2M_server_VB\obj\Debug\HttpServer.csproj.GenerateResource.cache
+C:\oneM2M_server_VB\obj\Debug\HttpServer.csproj.CoreCompileInputs.cache
+C:\oneM2M_server_VB\obj\Debug\HttpServer.csproj.CopyComplete
+C:\oneM2M_server_VB\obj\Debug\HttpServer.exe
+C:\oneM2M_server_VB\obj\Debug\HttpServer.pdb
