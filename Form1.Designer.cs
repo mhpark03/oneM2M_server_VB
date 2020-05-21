@@ -159,7 +159,7 @@
             this.tbSvcSvrCd.Name = "tbSvcSvrCd";
             this.tbSvcSvrCd.Size = new System.Drawing.Size(100, 21);
             this.tbSvcSvrCd.TabIndex = 7;
-            this.tbSvcSvrCd.Text = "300";
+            this.tbSvcSvrCd.Text = "111";
             // 
             // label2
             // 
@@ -614,7 +614,7 @@
             this.Controls.Add(this.tbLog);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
-            this.Text = "NB-IoT HTTP Server";
+            this.Text = "oneM2M Service Server";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
