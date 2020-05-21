@@ -457,15 +457,19 @@ namespace HttpServer
         private void SendDataToPlatform(string target_comm)
         {
             ReqHeader header = new ReqHeader();
+            string txData;
+
             if(target_comm == "oneM2M")
             {
                 //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text;
+                txData = tbData.Text;
             }
             else
             {
                 header.Url = brkUrlL + "/" + tbLwM2MEntityID.Text + "/10250/0/1";
                 //header.Url = brkUrlL + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
+                txData = tbLwM2MData.Text;
             }
             header.Method = "POST";
             header.X_M2M_Origin = svr.entityId;
@@ -478,7 +482,7 @@ namespace HttpServer
 
             string packetStr = "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
             packetStr += "<cnf>text/plain</cnf>";
-            packetStr += "<con>" + tbData.Text + "</con>";
+            packetStr += "<con>" + txData + "</con>";
             packetStr += "</m2m:cin>";
             string retStr = SendHttpRequest(header, packetStr);
             //if (retStr != string.Empty)
