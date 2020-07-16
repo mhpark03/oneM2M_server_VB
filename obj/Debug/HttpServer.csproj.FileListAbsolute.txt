@@ -55,3 +55,4 @@ D:\VisualStudio\workspace\oneM2M_server_VB\bin\Debug\oneM2MServiceServer.exe
 D:\VisualStudio\workspace\oneM2M_server_VB\bin\Debug\oneM2MServiceServer.pdb
 D:\VisualStudio\workspace\oneM2M_server_VB\obj\Debug\oneM2MServiceServer.exe
 D:\VisualStudio\workspace\oneM2M_server_VB\obj\Debug\oneM2MServiceServer.pdb
+D:\VisualStudio\workspace\oneM2M_server_VB\obj\Debug\HttpServer.csproj.CoreCompileInputs.cache

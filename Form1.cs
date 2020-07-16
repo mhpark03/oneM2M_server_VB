@@ -632,11 +632,38 @@ namespace HttpServer
                 if (tbLog.TextLength > 5000)
                     tbLog.Text = string.Empty;
                 tbLog.AppendText(Environment.NewLine);
-                data = data.Replace("><", ">" + Environment.NewLine + "<");         // xml tag 위치에 줄바꿈 삽입
-                tbLog.AppendText(" " + data);
+
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(data);
+                string minified = IndentedPrint(doc);
+
+                //data = data.Replace("><", ">" + Environment.NewLine + "<");         // xml tag 위치에 줄바꿈 삽입
+                tbLog.AppendText(" " + minified);
                 tbLog.SelectionStart = tbLog.TextLength;
                 tbLog.ScrollToCaret();
             }));
+        }
+
+        public static string IndentedPrint(XmlDocument doc)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (XmlTextWriter xmlTextWriter = new XmlTextWriter(memoryStream, Encoding.Unicode))
+                {
+                    xmlTextWriter.Formatting = System.Xml.Formatting.Indented;
+
+                    doc.WriteContentTo(xmlTextWriter);
+                    xmlTextWriter.Flush();
+                    memoryStream.Flush();
+
+                    memoryStream.Position = 0;
+
+                    using (StreamReader sr = new StreamReader(memoryStream))
+                    {
+                        return sr.ReadToEnd();
+                    }
+                }
+            }
         }
 
         /***** 아래부터는 Http Server 관련 *****/
