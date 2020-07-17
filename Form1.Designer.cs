@@ -65,8 +65,6 @@
             this.lboneM2MRxData = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.btnDataRetrive = new System.Windows.Forms.Button();
-            this.cboneM2MModel = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.tbContainer = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tbDeviceCTN = new System.Windows.Forms.TextBox();
@@ -409,8 +407,6 @@
             this.groupBox3.Controls.Add(this.lboneM2MRxData);
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Controls.Add(this.btnDataRetrive);
-            this.groupBox3.Controls.Add(this.cboneM2MModel);
-            this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.tbContainer);
             this.groupBox3.Controls.Add(this.label9);
             this.groupBox3.Controls.Add(this.tbDeviceCTN);
@@ -459,27 +455,6 @@
             this.btnDataRetrive.Text = "데이터 확인 (DB)";
             this.btnDataRetrive.UseVisualStyleBackColor = true;
             this.btnDataRetrive.Click += new System.EventHandler(this.btnDataRetrive_Click);
-            // 
-            // cboneM2MModel
-            // 
-            this.cboneM2MModel.FormattingEnabled = true;
-            this.cboneM2MModel.Items.AddRange(new object[] {
-            "AMM5400LG",
-            "TM800"});
-            this.cboneM2MModel.Location = new System.Drawing.Point(113, 20);
-            this.cboneM2MModel.Name = "cboneM2MModel";
-            this.cboneM2MModel.Size = new System.Drawing.Size(205, 20);
-            this.cboneM2MModel.TabIndex = 13;
-            this.cboneM2MModel.Text = "TM800";
-            // 
-            // label12
-            // 
-            this.label12.Location = new System.Drawing.Point(21, 17);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(94, 22);
-            this.label12.TabIndex = 11;
-            this.label12.Text = "모델명";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tbContainer
             // 
@@ -661,13 +636,11 @@
         private System.Windows.Forms.Button btnDelRemoteCSE;
         private System.Windows.Forms.TextBox tbContainer;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.TextBox tbLwM2MEntityID;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox tbLwM2MData;
         private System.Windows.Forms.Button btnLwM2MData;
-        private System.Windows.Forms.ComboBox cboneM2MModel;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btnDataRetrive;
         private System.Windows.Forms.Button btnDeviceStatusCheck;

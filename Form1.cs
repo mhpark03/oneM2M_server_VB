@@ -340,7 +340,8 @@ namespace HttpServer
             header.X_MEF_EKI = svr.enrmtKeyId;
             header.X_M2M_NM = svr.remoteCSEName;
 
-            string packetStr = "<m2m:csr xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
+            string packetStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            packetStr += "<m2m:csr xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
             packetStr += "<cst>3</cst>";
             packetStr += "<cb>/" + svr.entityId + "</cb>";
             packetStr += "<csi>/" + svr.entityId + "/cb-1</csi>";
@@ -480,7 +481,8 @@ namespace HttpServer
             header.Accept = "application/vnd.onem2m-res+xml";
             header.ContentType = "application/vnd.onem2m-res+xml;ty=4";
 
-            string packetStr = "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
+            string packetStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+            packetStr += "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
             packetStr += "<cnf>text/plain</cnf>";
             packetStr += "<con>" + txData + "</con>";
             packetStr += "</m2m:cin>";
@@ -633,11 +635,21 @@ namespace HttpServer
                     tbLog.Text = string.Empty;
                 tbLog.AppendText(Environment.NewLine);
 
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(data);
-                string minified = IndentedPrint(doc);
+                string minified = string.Empty;
+                if (data.StartsWith("<?xml", System.StringComparison.CurrentCultureIgnoreCase))
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(data);
+                    minified = IndentedPrint(doc);
+                }
+                else if (data.StartsWith("{", System.StringComparison.CurrentCultureIgnoreCase))
+                {
+                    JToken parsedJson = JToken.Parse(data);
+                    minified = parsedJson.ToString(Newtonsoft.Json.Formatting.Indented);
+                }
+                else
+                    minified = data;
 
-                //data = data.Replace("><", ">" + Environment.NewLine + "<");         // xml tag 위치에 줄바꿈 삽입
                 tbLog.AppendText(" " + minified);
                 tbLog.SelectionStart = tbLog.TextLength;
                 tbLog.ScrollToCaret();
