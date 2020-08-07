@@ -343,8 +343,8 @@ namespace HttpServer
             string packetStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
             packetStr += "<m2m:csr xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
             packetStr += "<cst>3</cst>";
-            packetStr += "<cb>/" + svr.entityId + "</cb>";
-            packetStr += "<csi>/" + svr.entityId + "/cb-1</csi>";
+            packetStr += "<csi>/" + svr.entityId + "</csi>";
+            packetStr += "<cb>/" + svr.entityId + "/cb-1</cb>";
             packetStr += "<rr>true</rr>";
             packetStr += "<poa>" + tbSeverIP.Text + ":" + tbSeverPort.Text + "</poa>";
             packetStr += "</m2m:csr>";
