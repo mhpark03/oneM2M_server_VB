@@ -494,7 +494,7 @@ namespace HttpServer
         private void DeviceCheckToPlatform()
         {
             ReqHeader header = new ReqHeader();
-            header.Url = brkUrlL + "/" + tbLwM2MEntityID.Text + "/10250/0/0";
+            header.Url = brkUrlL + "/" + tbLwM2MEntityID.Text + "/10250/0/1";
             header.Method = "GET";
             header.X_M2M_Origin = svr.entityId;
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "device_status";
