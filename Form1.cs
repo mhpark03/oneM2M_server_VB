@@ -32,6 +32,7 @@ namespace HttpServer
         string brkUrl = "https://testbrk.onem2m.uplus.co.kr:443"; // BRK(oneM2M 개발기)       
         string brkUrlL = "https://testbrks.onem2m.uplus.co.kr:8443"; // BRK(LwM2M 개발기)       
         string mefUrl = "https://testmef.onem2m.uplus.co.kr:443"; // MEF(개발기)
+        string logUrl = "http://106.103.228.184/api/v1"; // oneM2M log(개발기)
 
         string svrState = "STOP";
         
@@ -45,6 +46,7 @@ namespace HttpServer
         private void Form1_Load(object sender, EventArgs e)
         {
             svr.enrmtKeyId = string.Empty;
+            svr.entityId = string.Empty;
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -68,7 +70,7 @@ namespace HttpServer
             if (svr.svcCd != string.Empty && svr.svcSvrCd != string.Empty && svr.svcSvrNum != string.Empty)
                 RequestMEF();
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // CSE Base Get
@@ -78,7 +80,7 @@ namespace HttpServer
             if (svr.enrmtKeyId != string.Empty)
                 ReqCSEBaseGET();
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // RemoteCSE-GET
@@ -88,7 +90,7 @@ namespace HttpServer
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSEGet();
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // RemoteCSE-Create
@@ -98,7 +100,7 @@ namespace HttpServer
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSECreate();
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // RemoteCSE-Update
@@ -109,7 +111,7 @@ namespace HttpServer
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSEUpdate();
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // RemoteCSE-Delete
@@ -119,7 +121,7 @@ namespace HttpServer
             if (svr.enrmtKeyId != string.Empty)
                 ReqRemoteCSEDEL();
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         private void btnServer_Click(object sender, EventArgs e)
@@ -141,7 +143,7 @@ namespace HttpServer
                 }
             }
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // 데이터 수신 (oneM2M 플랫폼 DB)
@@ -151,7 +153,7 @@ namespace HttpServer
             if (svr.enrmtKeyId != string.Empty)
                 RetriveDataToPlatform();
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // 데이터 송신
@@ -164,7 +166,7 @@ namespace HttpServer
                 SendDataToPlatform(target_comm);
             }
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // 데이터 송신
@@ -177,7 +179,7 @@ namespace HttpServer
                 SendDataToPlatform(target_comm);
             }
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // LwM2M Device Status Check
@@ -189,7 +191,7 @@ namespace HttpServer
                 DeviceCheckToPlatform();
             }
             else
-                LogWrite("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
         }
 
         // 1. MEF 인증
@@ -815,6 +817,628 @@ namespace HttpServer
             {
                 LogWrite(ex.ToString());
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string kind = "type=lwm2m";
+            if (textBox1.TextLength > 8)
+                kind += "&ctn=" + textBox1.Text;
+            getSvrLoglists(kind);
+        }
+
+        private void getSvrLoglists(string kind)
+        {
+            ReqHeader header = new ReqHeader();
+            header.Url = logUrl + "/logs?" + kind;
+            header.Method = "GET";
+            header.ContentType = "application/json";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "LogList";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            string retStr = GetHttpLog(header, string.Empty);
+
+            if (retStr != string.Empty)
+            {
+                //LogWriteNoTime(retStr);
+                try
+                {
+                    JArray jarr = JArray.Parse(retStr); //json 객체로
+
+                    listBox1.Items.Clear();
+                    listBox2.Items.Clear();
+                    listBox3.Items.Clear();
+                    foreach (JObject jobj in jarr)
+                    {
+                        string time = jobj["logTime"].ToString();
+                        string logtime = time.Substring(8, 2) + ":" + time.Substring(10, 2) + ":" + time.Substring(12, 2);
+                        var pathInfo = jobj["pathInfo"] ?? "NULL";
+                        var trgAddr = jobj["trgAddr"] ?? "NULL";
+                        string path = pathInfo.ToString();
+                        if (path == "NULL")
+                            path = jobj["resType"].ToString() + " : " + trgAddr.ToString();
+
+                        listBox1.Items.Add(logtime + "\t" + jobj["logId"].ToString() + "\t" + jobj["resultCode"].ToString() + "\t   " + jobj["resultCodeName"].ToString() + " (" + path + ")");
+                    }
+
+                    if (listBox1.Items.Count != 0)
+                    {
+                        listBox1.SelectedIndex = 0;
+                        //getSvrEventLog(listBox1.SelectedItem.ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+        }
+
+        public string GetHttpLog(ReqHeader header, string data)
+        {
+            string resResult = string.Empty;
+
+            try
+            {
+                wReq = (HttpWebRequest)WebRequest.Create(header.Url);
+                wReq.Method = header.Method;
+                if (header.ContentType != string.Empty)
+                    wReq.ContentType = header.ContentType;
+                /*
+                if (header.X_M2M_RI != string.Empty)
+                    wReq.Headers.Add("X-M2M-RI", header.X_M2M_RI);
+                if (header.X_M2M_Origin != string.Empty)
+                    wReq.Headers.Add("X-M2M-Origin", header.X_M2M_Origin);
+                if (header.X_MEF_TK != string.Empty)
+                    wReq.Headers.Add("X-MEF-TK", header.X_MEF_TK);
+                if (header.X_MEF_EKI != string.Empty)
+                    wReq.Headers.Add("X-MEF-EKI", header.X_MEF_EKI);
+                */
+
+                LogWrite(wReq.Method + " " + wReq.RequestUri + " HTTP/1.1");
+                Console.WriteLine(wReq.Method + " " + wReq.RequestUri + " HTTP/1.1");
+                Console.WriteLine("");
+                for (int i = 0; i < wReq.Headers.Count; ++i)
+                    Console.WriteLine(wReq.Headers.Keys[i] + ": " + wReq.Headers[i]);
+                Console.WriteLine("");
+                Console.WriteLine(data);
+                Console.WriteLine("");
+
+                wReq.Timeout = 20000;          // 서버 응답을 20초동안 기다림
+                using (wRes = (HttpWebResponse)wReq.GetResponse())
+                {
+                    Console.WriteLine("HTTP/1.1 " + (int)wRes.StatusCode + " " + wRes.StatusCode.ToString());
+                    Console.WriteLine("");
+                    for (int i = 0; i < wRes.Headers.Count; ++i)
+                        Console.WriteLine("[" + wRes.Headers.Keys[i] + "] " + wRes.Headers[i]);
+                    Console.WriteLine("");
+
+                    Stream respPostStream = wRes.GetResponseStream();
+                    StreamReader readerPost = new StreamReader(respPostStream, Encoding.GetEncoding("UTF-8"), true);
+                    resResult = readerPost.ReadToEnd();
+                    Console.WriteLine(resResult);
+                    Console.WriteLine("");
+                }
+            }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.ProtocolError && ex.Response != null)
+                {
+                    var resp = (HttpWebResponse)ex.Response;
+                    Console.WriteLine("HTTP/1.1 " + (int)resp.StatusCode + " " + resp.StatusCode.ToString());
+                    Console.WriteLine("");
+                    for (int i = 0; i < resp.Headers.Count; ++i)
+                        Console.WriteLine(" " + resp.Headers.Keys[i] + ": " + resp.Headers[i]);
+                    Console.WriteLine("");
+
+                    Stream respPostStream = resp.GetResponseStream();
+                    StreamReader readerPost = new StreamReader(respPostStream, Encoding.GetEncoding("UTF-8"), true);
+                    string resError = readerPost.ReadToEnd();
+                    Console.WriteLine(resError);
+                    Console.WriteLine("");
+                    Console.WriteLine("[" + (int)resp.StatusCode + "] " + resp.StatusCode.ToString());
+                }
+                else
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            return resResult;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string kind = "type=onem2m";
+            if (tbDeviceCTN.TextLength > 8)
+                kind += "&ctn=" + tbDeviceCTN.Text;
+            getSvrLoglists(kind);
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            getSvrEventLog(listBox1.SelectedItem.ToString());
+        }
+
+        private void getSvrEventLog(string selected_msg)
+        {
+            string[] values = selected_msg.Split('\t');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+
+            tBResultCode.Text = values[2];
+            label21.Text = "서버로그 ID : " + values[1] + " 상세내역";
+
+            // oneM2M log server 응답 확인 (resultcode)
+            ReqHeader header = new ReqHeader();
+            header.Url = logUrl + "/apilog?logId=" + values[1];
+            //header.Url = logUrl + "/apilog?Id=61";
+            header.Method = "GET";
+            header.ContentType = "application/json";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "LogDetail";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            string retStr = GetHttpLog(header, string.Empty);
+
+            listBox2.Items.Clear();
+            listBox3.Items.Clear();
+            if (retStr != string.Empty)
+            {
+                //LogWriteNoTime(retStr);
+                try
+                {
+                    JArray jarr = JArray.Parse(retStr); //json 객체로
+
+                    foreach (JObject jobj in jarr)
+                    {
+                        string time = jobj["logTime"].ToString();
+                        string logtime = time.Substring(8, 2) + ":" + time.Substring(10, 2) + ":" + time.Substring(12, 2);
+                        var pathInfo = jobj["pathInfo"] ?? "NULL";
+                        var trgAddr = jobj["trgAddr"] ?? "NULL";
+                        var logType = jobj["logType"] ?? " ";
+
+                        string path = pathInfo.ToString();
+                        if (path == "NULL")
+                            path = jobj["resType"].ToString() + " : " + trgAddr.ToString();
+
+                        listBox2.Items.Add(logtime + "\t" + jobj["logId"].ToString() + "\t" + jobj["resultCode"].ToString() + "\t   " + jobj["resultCodeName"].ToString() + " (" + logType.ToString() + " => " + path + ")");
+                    }
+
+                    if (listBox2.Items.Count != 0)
+                    {
+                        listBox2.SelectedIndex = 0;
+                        //getSvrDetailLog(listBox2.SelectedItem.ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ReqHeader header = new ReqHeader();
+            header.Url = logUrl + "/resultCode?value=" + tBResultCode.Text;
+            header.Method = "GET";
+            header.ContentType = "application/json";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "ResultCode";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            string retStr = GetHttpLog(header, string.Empty);
+            if (retStr != string.Empty)
+            {
+                //LogWriteNoTime(retStr);
+                try
+                {
+                    JObject obj = JObject.Parse(retStr);
+
+                    var resultCode = obj["resultCode"] ?? tBResultCode.Text;
+                    var codeName = obj["codeName"] ?? "NULL";
+                    var desc = obj["desc"] ?? "NULL";
+
+                    MessageBox.Show("message = " + codeName.ToString() + "\ndescription = " + desc.ToString(), "Resultcode=" + resultCode.ToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            else
+                MessageBox.Show("message = " + "Unknown" + "\ndescription = " + "Resultcode 값이 존재하지 않습니다.", "Resultcode=" + tBResultCode.Text);
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            getSvrDetailLog(listBox2.SelectedItem.ToString());
+        }
+
+        private void getSvrDetailLog(string selected_msg)
+        {
+            string[] values = selected_msg.Split('\t');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+
+            tBResultCode.Text = values[2];
+            label22.Text = "ID : " + values[1] + " 상세내역";
+
+            // oneM2M log server 응답 확인 (resultcode)
+            ReqHeader header = new ReqHeader();
+            header.Url = logUrl + "/log?logId=" + values[1];
+            header.Method = "GET";
+            header.ContentType = "application/json";
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "LogDetail";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            string retStr = GetHttpLog(header, string.Empty);
+
+            listBox3.Items.Clear();
+            //listBox3.Items.Add(DateTime.Now.ToString("hh:mm:ss.fff") + " : " + values[1]);
+
+            if (retStr != string.Empty)
+            {
+                //LogWriteNoTime(retStr);
+
+                try
+                {
+                    JArray jarr = JArray.Parse(retStr); //json 객체로
+
+                    foreach (JObject jobj in jarr)
+                    {
+                        var methodName = jobj["methodName"] ?? " ";
+                        var logType = jobj["logType"] ?? " ";
+                        var svrType = jobj["svrType"] ?? " ";
+
+                        string message = " \t ";
+
+                        string logtype = logType.ToString();
+                        if (logtype == "COAP")
+                        {
+                            var coapType = jobj["coapType"] ?? " ";
+                            message = coapType.ToString() + " (";
+
+
+                            var code = jobj["code"] ?? " ";
+                            message += code.ToString();
+
+                            var uriPath = jobj["uriPath"] ?? "";
+                            string path = uriPath.ToString();
+                            if (path != "")
+                                message += " " + path;
+
+                            message += ")\t ";
+
+                            var coapPayload = jobj["coapPayload"] ?? "";
+                            if (coapPayload.ToString() != "")
+                            {
+                                var uriQuery = jobj["uriQuery"] ?? " ";
+                                if (uriQuery.ToString() == " ")
+                                    message += coapPayload.ToString();
+                                else
+                                {
+                                    if (path.StartsWith("rd/", System.StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        message += coapPayload.ToString();
+                                    }
+                                    else
+                                    {
+                                        message += uriQuery.ToString() + "\n";
+
+                                        if (uriPath.ToString() == "rd")
+                                        {
+                                            var others = jobj["others"] ?? "";
+                                            if (others.ToString() == "")
+                                            {
+                                                message += "\n2048(EKI), 2049(TOKEN) 정보가 없습니다\n";
+                                            }
+                                        }
+                                        message += "\n" + coapPayload.ToString();
+                                    }
+                                }
+                            }
+                        }
+                        else if (logtype == "API_LOG")            //  서버 API LOG
+                        {
+                            logtype = "API";
+                            var resultCode = jobj["resultCode"] ?? " ";
+                            var trgAddr = jobj["trgAddr"] ?? " ";
+                            var prtcType = jobj["prtcType"] ?? " ";
+                            //if (resultCode.ToString() != " ")
+                            //    tBResultCode.Text = resultCode.ToString();
+
+                            message = resultCode.ToString() + " (" + prtcType.ToString() + ")\t" + trgAddr.ToString();
+                        }
+                        else if (logtype == "HTTP")
+                        {
+                            var httpMethod = jobj["httpMethod"] ?? " ";
+                            var uri = jobj["uri"] ?? " ";
+                            var body = jobj["body"] ?? " ";
+                            var responseBody = jobj["responseBody"] ?? " ";
+
+                            string decode = " ";
+                            string bodymsg = body.ToString();
+                            bodymsg = bodymsg.Replace("\t", "");
+                            Console.WriteLine(bodymsg);
+
+                            if (bodymsg.StartsWith("{", System.StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                try
+                                {
+                                    JObject obj = JObject.Parse(bodymsg);
+
+                                    string format = obj["cnf"].ToString(); // data format
+                                    string value = obj["con"].ToString(); // data value
+
+                                    if (format == "application/octet-stream")
+                                    {
+                                        string hexOutput = string.Empty;
+                                        string ascii = "YES";
+                                        byte[] orgBytes = Convert.FromBase64String(value);
+                                        char[] orgChars = System.Text.Encoding.ASCII.GetString(orgBytes).ToCharArray();
+                                        foreach (char _eachChar in orgChars)
+                                        {
+                                            // Get the integral value of the character.
+                                            int intvalue = Convert.ToInt32(_eachChar);
+                                            // Convert the decimal value to a hexadecimal value in string form.
+                                            if (intvalue < 16)
+                                            {
+                                                hexOutput += "0";
+                                                ascii = "NO";
+                                            }
+                                            else if (intvalue < 32)
+                                            {
+                                                ascii = "NO";
+                                            }
+                                            hexOutput += String.Format("{0:X}", intvalue);
+                                        }
+                                        //logPrintInTextBox(hexOutput, "");
+
+                                        if (hexOutput != string.Empty)
+                                        {
+                                            decode = "\n\n( HEX DATA : " + hexOutput;
+
+                                            if (ascii == "YES")
+                                            {
+                                                string asciidata = Encoding.UTF8.GetString(orgBytes);
+                                                decode += "\nASCII DATA : " + asciidata;
+                                            }
+                                            decode += ")";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        decode = "\n\n( DATA : " + value + " )";
+                                    }
+                                    //LogWrite("decode = " + decode);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex.ToString());
+                                }
+                            }
+                            else if (bodymsg.StartsWith("<?xml", System.StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                string format = string.Empty;
+                                string value = string.Empty;
+
+                                //bodymsg = bodymsg.Replace("\\t", "");
+                                XmlDocument xDoc = new XmlDocument();
+                                xDoc.LoadXml(bodymsg);
+                                Console.WriteLine(xDoc.OuterXml.ToString());
+
+                                XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
+                                foreach (XmlNode xn in xnList)
+                                {
+                                    try
+                                    {
+                                        if (xn["cnf"] != null)
+                                            format = xn["cnf"].InnerText; // data format
+                                        if (xn["con"] != null)
+                                            value = xn["con"].InnerText; // data value
+
+                                        if (xn["nev"] != null)
+                                        {
+                                            if (xn["nev"]["rep"]["m2m:cin"]["cnf"] != null)
+                                                format = xn["nev"]["rep"]["m2m:cin"]["cnf"].InnerText; // data format
+                                            if (xn["nev"]["rep"]["m2m:cin"]["con"] != null)
+                                                value = xn["nev"]["rep"]["m2m:cin"]["con"].InnerText; // data value
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.ToString());
+                                    }
+                                }
+                                //LogWrite("value = " + value);
+                                //LogWrite("format = " + format);
+
+                                if (format == "application/octet-stream")
+                                {
+                                    string hexOutput = string.Empty;
+                                    string ascii = "YES";
+                                    byte[] orgBytes = Convert.FromBase64String(value);
+                                    char[] orgChars = System.Text.Encoding.ASCII.GetString(orgBytes).ToCharArray();
+                                    foreach (char _eachChar in orgChars)
+                                    {
+                                        // Get the integral value of the character.
+                                        int intvalue = Convert.ToInt32(_eachChar);
+                                        // Convert the decimal value to a hexadecimal value in string form.
+                                        if (intvalue < 16)
+                                        {
+                                            hexOutput += "0";
+                                            ascii = "NO";
+                                        }
+                                        else if (intvalue < 32)
+                                        {
+                                            ascii = "NO";
+                                        }
+                                        hexOutput += String.Format("{0:X}", intvalue);
+                                    }
+                                    //logPrintInTextBox(hexOutput, "");
+
+                                    if (hexOutput != string.Empty)
+                                    {
+                                        decode = "\n\n( HEX DATA : " + hexOutput;
+
+                                        if (ascii == "YES")
+                                        {
+                                            string asciidata = Encoding.UTF8.GetString(orgBytes);
+                                            decode += "\nASCII DATA : " + asciidata;
+                                        }
+                                        decode += ")";
+                                    }
+                                }
+                                else if (value != string.Empty)
+                                {
+                                    decode = "\n\n( DATA : " + value + " )";
+                                }
+                                //LogWrite("decode = " + decode);
+                            }
+                            else if (bodymsg.StartsWith("<m2m", System.StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                string format = string.Empty;
+                                string value = string.Empty;
+
+                                //bodymsg = bodymsg.Replace("\\t", "");
+                                XmlDocument xDoc = new XmlDocument();
+                                xDoc.LoadXml(bodymsg);
+                                Console.WriteLine(xDoc.OuterXml.ToString());
+
+                                XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
+                                foreach (XmlNode xn in xnList)
+                                {
+                                    try
+                                    {
+                                        if (xn["cnf"] != null)
+                                            format = xn["cnf"].InnerText; // data format
+                                        if (xn["con"] != null)
+                                            value = xn["con"].InnerText; // data value
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.ToString());
+                                    }
+                                }
+                                //LogWrite("value = " + value);
+                                //LogWrite("format = " + format);
+
+                                if (format == "application/octet-stream")
+                                {
+                                    string hexOutput = string.Empty;
+                                    string ascii = "YES";
+                                    byte[] orgBytes = Convert.FromBase64String(value);
+                                    char[] orgChars = System.Text.Encoding.ASCII.GetString(orgBytes).ToCharArray();
+                                    foreach (char _eachChar in orgChars)
+                                    {
+                                        // Get the integral value of the character.
+                                        int intvalue = Convert.ToInt32(_eachChar);
+                                        // Convert the decimal value to a hexadecimal value in string form.
+                                        if (intvalue < 16)
+                                        {
+                                            hexOutput += "0";
+                                            ascii = "NO";
+                                        }
+                                        else if (intvalue < 32)
+                                        {
+                                            ascii = "NO";
+                                        }
+                                        hexOutput += String.Format("{0:X}", intvalue);
+                                    }
+                                    //logPrintInTextBox(hexOutput, "");
+
+                                    if (hexOutput != string.Empty)
+                                    {
+                                        decode = "\n\n( HEX DATA : " + hexOutput;
+
+                                        if (ascii == "YES")
+                                        {
+                                            string asciidata = Encoding.UTF8.GetString(orgBytes);
+                                            decode += "\nASCII DATA : " + asciidata;
+                                        }
+                                        decode += ")";
+                                    }
+                                }
+                                else if (value != string.Empty)
+                                {
+                                    decode = "\n\n( DATA : " + value + " )";
+                                }
+                                //LogWrite("decode = " + decode);
+                            }
+
+                            message = httpMethod.ToString() + " " + uri.ToString() + "\tREQUEST\n" + bodymsg + decode + "\n\nRESPONSE\n" + responseBody;
+                        }
+                        else if (logtype == "HTTP_CLIENT")
+                        {
+                            logtype = "CLIENT";
+                            var responseCode = jobj["responseCode"] ?? " ";
+                            string resp = responseCode.ToString();
+
+                            var uri = jobj["uri"] ?? " ";
+                            var reqheader = jobj["header"] ?? " ";
+                            var responseHeader = jobj["responseHeader"] ?? " ";
+
+                            if (responseHeader.ToString() != " ")
+                            {
+                                JObject obj = JObject.Parse(responseHeader.ToString());
+                                var rsc = obj["X-M2M-RSC"] ?? " ";
+                                resp += "/" + rsc.ToString();
+                                var resultcode = obj["X-LGU-RSC"] ?? " ";
+                                if (resultcode.ToString() != " ")
+                                    tBResultCode.Text = resultcode.ToString();
+                            }
+
+                            message = resp + " (" + uri.ToString() + ")\tREQUEST\n" + reqheader + "\n\nRESPONSE\n" + responseHeader;
+                        }
+                        else if (logtype == "RUNTIME_LOG")
+                        {
+                            logtype = "RUN";
+                            var topicOrEntityId = jobj["topicOrEntityId"] ?? " ";
+                            var requestEntity = jobj["requestEntity"] ?? " ";
+                            var responseEntity = jobj["responseEntity"] ?? " ";
+
+                            message = topicOrEntityId.ToString() + "\tREQUEST\n" + requestEntity + "\n\nRESPONSE\n" + responseEntity;
+                        }
+
+                        string svrtype = svrType.ToString();
+                        if (svrtype == "CSE-NB01")
+                            svrtype = "CSNB01";
+
+                        string method = methodName.ToString();
+                        if (method == "httpClientRuntimeLog")
+                            method = "httpClientRuntime";
+
+                        if (method.Length < 8)
+                            method += "         ";
+
+                        listBox3.Items.Add(svrtype + "\t" + logtype + "\t" + method + "\t" + message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+        }
+
+        private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selected_msg = listBox3.SelectedItem.ToString();
+            string[] values = selected_msg.Split('\t');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+
+            if (values[4] != " ")
+                MessageBox.Show(values[4], "전문 상세내역");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (svr.entityId != string.Empty)
+            {
+                string kind = string.Empty;
+                kind += "entityId=" + svr.entityId;
+                getSvrLoglists(kind);
+            }
+            else
+               MessageBox.Show("서버인증파라미터 세팅하세요");
         }
     }
 
