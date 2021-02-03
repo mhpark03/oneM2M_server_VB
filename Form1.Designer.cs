@@ -72,6 +72,7 @@
             this.tbDeviceCTN = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.button6 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
@@ -523,6 +524,7 @@
             this.tbDeviceCTN.Name = "tbDeviceCTN";
             this.tbDeviceCTN.Size = new System.Drawing.Size(205, 21);
             this.tbDeviceCTN.TabIndex = 8;
+            this.tbDeviceCTN.Text = "01222991234";
             // 
             // label8
             // 
@@ -535,6 +537,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.button6);
             this.groupBox4.Controls.Add(this.button2);
             this.groupBox4.Controls.Add(this.textBox1);
             this.groupBox4.Controls.Add(this.label19);
@@ -553,6 +556,16 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "LwM2M Device DATA";
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(518, 30);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(87, 19);
+            this.button6.TabIndex = 56;
+            this.button6.Text = "Device 정보 조회";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // button2
             // 
             this.button2.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -570,6 +583,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(205, 21);
             this.textBox1.TabIndex = 22;
+            this.textBox1.Text = "01222991234";
             // 
             // label19
             // 
@@ -893,6 +907,7 @@
         private System.Windows.Forms.TextBox tBResultCode;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Button button6;
     }
 }
 

@@ -35,7 +35,7 @@ namespace HttpServer
         string logUrl = "http://106.103.228.184/api/v1"; // oneM2M log(개발기)
 
         string svrState = "STOP";
-        
+
         ServiceServer svr = new ServiceServer();
 
         public Form1()
@@ -220,7 +220,7 @@ namespace HttpServer
             {
                 ParsingXml(retStr);
 
-                string nameCSR = svr.entityId.Replace("-","");
+                string nameCSR = svr.entityId.Replace("-", "");
                 lbremoteCSEName.Text = "csr-" + nameCSR;
                 svr.remoteCSEName = lbremoteCSEName.Text;
                 //LogWrite("svr.remoteCSEName = " + svr.remoteCSEName);
@@ -377,7 +377,7 @@ namespace HttpServer
         private void ReqRemoteCSEUpdate()
         {
             ReqHeader header = new ReqHeader();
-            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/"+svr.remoteCSEName;
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/" + svr.remoteCSEName;
             header.Method = "PUT";
             header.Accept = "application/vnd.onem2m-res+json";
             header.ContentType = "application/vnd.onem2m-res+json";
@@ -421,7 +421,7 @@ namespace HttpServer
         {
             ReqHeader header = new ReqHeader();
             //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP/la";
-            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text +"/la";
+            header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text + "/la";
             header.Method = "GET";
             header.X_M2M_Origin = svr.entityId;
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data_retrive";
@@ -462,7 +462,7 @@ namespace HttpServer
             ReqHeader header = new ReqHeader();
             string txData;
 
-            if(target_comm == "oneM2M")
+            if (target_comm == "oneM2M")
             {
                 //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + tbDeviceCTN.Text + "/cnt-" + tbContainer.Text;
@@ -1438,7 +1438,44 @@ namespace HttpServer
                 getSvrLoglists(kind);
             }
             else
-               MessageBox.Show("서버인증파라미터 세팅하세요");
+                MessageBox.Show("서버인증파라미터 세팅하세요");
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text != string.Empty)
+            {
+                ReqHeader header = new ReqHeader();
+                header.Url = logUrl + "/device?ctn=" + textBox1.Text;
+                //header.Url = logUrl + "/device?ctn=99977665825";
+                header.Method = "GET";
+                header.ContentType = "application/json";
+                header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "DeviceGet";
+                header.X_M2M_Origin = svr.entityId;
+                header.X_MEF_TK = svr.token;
+                header.X_MEF_EKI = svr.enrmtKeyId;
+                string retStr = GetHttpLog(header, string.Empty);
+                if (retStr != string.Empty)
+                {
+                    //LogWriteNoTime(retStr);
+                    try
+                    {
+                        JArray jarr = JArray.Parse(retStr); //json 객체로
+
+                        JObject obj = JObject.Parse(jarr[0].ToString());
+
+                        var entityId = obj["entityId"] ?? "unknown";
+                        tbLwM2MEntityID.Text = entityId.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                        MessageBox.Show("DEVICE 정보가 존재하지 않습니다.\nhttps://testadm.onem2m.uplus.co.kr:8443 에서 확인바랍니다.", textBox1.Text + " DEVICE 상태 정보");
+                    }
+                }
+                else
+                    MessageBox.Show("DEVICE 정보가 존재하지 않습니다.\nhttps://testadm.onem2m.uplus.co.kr:8443 에서 확인바랍니다.", textBox1.Text + " DEVICE 상태 정보");
+            }
         }
     }
 
